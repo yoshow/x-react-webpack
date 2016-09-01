@@ -8,7 +8,8 @@ class AccountList extends React.Component {
   componentDidMount() {
     $.get(this.props.source, function (result) {
       console.log(result);
-      this.state.data = result.data;
+      this.setState({data: result.data});
+      // this.state.data = result.data;
     }.bind(this));
   }
 
@@ -18,7 +19,8 @@ class AccountList extends React.Component {
         Hello, world!I am a AccountList.
         {
           this.state.data.map(function (item) {
-            return <div>{item.name}</div>
+            console.log(item);
+            return <div key={item.name}>{item.name}</div>
           })
         }
       </div>
