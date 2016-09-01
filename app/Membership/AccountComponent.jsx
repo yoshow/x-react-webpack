@@ -8,7 +8,7 @@ class AccountComponent extends React.Component {
     return (
       <div className="AccountBox">
         <h1>Accounts</h1>
-        <AccountList source="/build/test.json" />
+        <AccountList source="/data/accounts.json" />
         <AccountForm name="name1" />
         <AccountForm name="name2" />
       </div>

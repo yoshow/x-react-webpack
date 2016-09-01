@@ -24,5 +24,25 @@ module.exports = {
             },
             { test: /\.css$/, loader: "style!css" }
         ]
+    },
+    devServer: {
+    proxy: {
+      '/api/': {
+        "target": {
+        "host": "localhost",
+        "protocol": 'http:',
+        "port": 30000,
+        "secure": false
+        }
+      },
+      '/resources/': {{
+        "target": {
+        "host": "localhost",
+        "protocol": 'http:',
+        "port": 30000,
+        "secure": false
+        }
+      }
     }
+  }
 };
