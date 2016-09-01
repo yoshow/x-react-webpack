@@ -31,6 +31,25 @@ module.exports = {
         "target": {
         "host": "localhost",
         "protocol": 'http:',
+        "port": 30000
+        },
+        secure: false
+      },
+      '/resources/': {
+        "target": {
+        "host": "localhost",
+        "protocol": 'http:',
+        "port": 30000
+        },
+        secure: false
+      }
+    },
+    devServer: {
+    proxy: {
+      '/api/': {
+        "target": {
+        "host": "localhost",
+        "protocol": 'http:',
         "port": 30000,
         "secure": false
         }
