@@ -12,8 +12,8 @@ class AccountForm extends React.Component {
       <div>
         name: {this.state.name}
         <form className="AccountForm">
-          <input type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange} /> 
-          <input type="text" placeholder="Say something..." /> 
+          <input type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange.bind(this)} />
+          <input type="text" placeholder="Say something..." />
           <input type="submit" value="Post" />
           <button id="" >确定</button>
         </form>
