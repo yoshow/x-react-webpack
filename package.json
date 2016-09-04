@@ -9,13 +9,13 @@
   },
   "repository": {
     "type": "git",
-    "url": ".."
+    "url": "https://github.com/yoshow/x-react-webpack"
   },
   "keywords": [
     "react",
     "webpack"
   ],
-  "author": "yixuan",
+  "author": "ruanyu@live.com",
   "devDependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.7.10",

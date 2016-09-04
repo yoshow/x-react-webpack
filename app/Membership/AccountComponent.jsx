@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import Mask from '../../shared/layouts/Mask';
+
 import AccountForm from './AccountForm';
 import AccountList from './AccountList';
 
@@ -17,7 +19,7 @@ class AccountComponent extends React.Component {
         <div id="window-main-table" className="table">
           <div id="window-main-table-header" className="table-header x-freeze-height">
             <div id="toolbar" className="table-toolbar">
-              <button id="btnCreate" className="btn btn-default" onClick={this.handleClick.bind(this)}>新增</button>
+              <button id="btnCreate" className="btn btn-default" onClick={this.handleClick.bind(this) }>新增</button>
             </div>
             <span>人像库列表</span>
             <input id="statusList" type="hidden" value="@ViewBag.status" />
@@ -41,7 +43,13 @@ class AccountComponent extends React.Component {
   }
 
   renderModel(props) {
-    this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, <AccountForm props={props} />, this.div);
+    var obj = (
+      <Mask >
+        <AccountForm props={props} />
+      </Mask>
+    );
+
+    this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, obj, this.div);
   }
 }
 

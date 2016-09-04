@@ -1,5 +1,7 @@
 import React from 'react';
 
+var styleBorder = { border: '1px solid #ff0' };
+
 class AccountForm extends React.Component {
   constructor(props) {
     super(props);
@@ -7,12 +9,13 @@ class AccountForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+
   render() {
     return (
-      <div>
+      <div style={styleBorder}>
         name: {this.state.name}
         <form className="AccountForm">
-          <input type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange.bind(this)} />
+          <input type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange.bind(this) } />
           <input type="text" placeholder="Say something..." />
           <input type="submit" value="Post" />
           <button id="" >确定</button>

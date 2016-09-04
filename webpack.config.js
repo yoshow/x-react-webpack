@@ -1,9 +1,9 @@
 var path = require('path');
 
 var commonLoaders = [
-	{ test: /\.js$/, loader: "jsx-loader" },
-	{ test: /\.png$/, loader: "url-loader" },
-	{ test: /\.jpg$/, loader: "file-loader" },
+  { test: /\.js$/, loader: "jsx-loader" },
+  { test: /\.png$/, loader: "url-loader" },
+  { test: /\.jpg$/, loader: "file-loader" },
 ];
 
 var assetsPath = path.join(__dirname, "public", "assets");
@@ -61,23 +61,5 @@ module.exports = [{
         }
       }
     }
-  }},
-  
-	{
-		// The configuration for the server-side rendering
-		name: "server-side rendering",
-		entry: "./server/page.js",
-		target: "node",
-		output: {
-			path: assetsPath,
-			filename: "../../server/page.generated.js",
-			publicPath: publicPath,
-			libraryTarget: "commonjs2"
-		},
-		externals: /^[a-z\-0-9]+$/,
-		module: {
-			loaders: commonLoaders.concat([
-				{ test: /\.css$/,  loader: path.join(__dirname, "server", "style-collector") + "!css-loader" },
-			])
-		}
-	}];
+  }
+}];

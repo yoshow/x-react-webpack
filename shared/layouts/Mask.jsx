@@ -1,82 +1,104 @@
 import React from 'react';
 
-class Mask extends React.Component {
-  constructor(props) {
+// 遮罩的样式
+var styleMaskWrapper = {
+  position: "fixed",
+  top: "0px",
+  left: "0px",
+  zIndex: 90,
+  width: "100%",
+  height: "100%",
+  opacity: "0.4",
+  background: "rgb(0, 0, 0)"
+}
+
+// 遮罩弹出窗口样式
+var styleMaskPopupWindow = {
+  width: "720px",
+  height: "430px",
+  zIndex: 800,
+  position: "fixed",
+  left: "440px",
+  top: "40px"
+}
+
+class Mask extends React.Component
+{
+  constructor(props)
+  {
     super(props);
-    this.state = { columns: props.columns, data: props.data };
+    this.state = { name: props.name };
+
+    this.name = props.name;
+    // 封装器
+    this.wrapperName = props.name + '-wrapper';
+    this.popupWindowName = props.name + '-popupWindow';
   }
 
-  render() {
+  /**
+   * 组件加载完事件  
+   */
+  componentDidMount()
+  {
+    x.debug.log(this.refs.popupWindow);
+
+    // 遮罩元素
+    var wrapper = this.refs.wrapper;
+
+    // var element = document.getElementById(this.popupWindowName);
+    var element = this.refs.popupWindow;
+
+    // 弹出窗口的位置
+    // var pointX = this.options.left, pointY = this.options.top;
+    var pointX = 0, pointY = 40;
+
+    if (element === null)
+    {
+      element = document.createElement('div');
+
+      element.id = this.popupWindowName;
+
+      element.style.width = this.options.width;
+
+      element.style.height = this.options.height;
+
+      element.style.display = 'none';
+
+      element.style.zIndex = x.ui.mask.zIndex++;
+
+      $(document.body).append(element);
+
+      $(element).fadeIn('normal');
+
+      pointX = (x.page.getRange().width - $(element).width()) / 2;
+
+      // 设置窗口的位置
+      x.dom.fixed('#' + this.popupWindowName, pointX, pointY);
+    }
+    else
+    {
+      // element.style.zIndex = x.ui.mask.zIndex++;
+      element.style.zIndex = 1000;
+
+      // $(element).show();
+      $(element).fadeIn('normal');
+
+      pointX = (x.page.getRange().width - $(element).width()) / 2;
+
+      x.dom.fixed('#' + this.popupWindowName, pointX, pointY);
+    }
+  }
+
+  render()
+  {
     return (
-      <div className="table-freeze">
-        <div className="table-freeze-head">
-          <table className="table" >
-            <thead>
-              <tr>
-                {
-                  this.state.columns.map(function (node) {
-                    var widthValue = {};
-
-                    if (node.width) {
-                      widthValue = { width: node.width };
-                    }
-
-                    if (node.icon) {
-                      return (<th key={node.name} style={widthValue} title={node.name} ><i className={node.icon}></i></th>);
-                    }
-                    else {
-                      return (<th key={node.name} style={widthValue} title={node.name} >{node.name}</th>);
-                    }
-                  })
-                }
-                <th className="table-freeze-head-padding" ></th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-
-        <div className="table-freeze-body">
-          <table className="table table-striped">
-            <colgroup>
-              {
-                this.state.columns.map(function (node) {
-                  var widthValue = {};
-
-                  if (node.width) {
-                    widthValue = { width: node.width };
-                  }
-
-                  return (<col style={widthValue} />);
-                })
-              }
-            </colgroup>
-            <tbody>
-              {
-                this.state.data.map(function (node) {
-                  console.log(node);
-                  return (
-                    <tr>
-                      <td><span >{node.name}</span></td>
-                    </tr>
-                  );
-                })
-              }
-            </tbody>
-          </table>
+      <div id={this.name} >
+        <div id={this.wrapperName} style={styleMaskWrapper} ref="wrapper"></div>
+        <div id={this.popupWindowName} style={styleMaskPopupWindow}  ref="popupWindow">
+          {this.props.children}
         </div>
       </div>
     );
-  }
-
-  createBody() {
-    this.state.data.map(function (node) {
-      console.log(item);
-      return (
-        <tr id="data-row-{node.id}" >
-          <td><span >{node.name}</span></td>
-        </tr>
-      );
-    });
   }
 }
 

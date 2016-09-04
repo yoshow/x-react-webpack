@@ -3,6 +3,9 @@ import React from 'react';
 import Grid from '../../shared/layouts/Grid';
 
 class AccountList extends React.Component {
+  /**
+   * 构造函数
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -10,15 +13,18 @@ class AccountList extends React.Component {
         { "name": "名称" },
         { "name": "状态", "width": "60px" },
         { "name": "操作", "width": "60px" },
-        { "name": "编辑", "width": "30px", icon:"fa fa-edit" },
-        { "name": "复制", "width": "30px", icon:"fa fa-copy" },
-        { "name": "删除", "width": "30px", icon:"fa fa-trash" }
+        { "name": "编辑", "width": "30px", icon: "fa fa-edit" },
+        { "name": "复制", "width": "30px", icon: "fa fa-copy" },
+        { "name": "删除", "width": "30px", icon: "fa fa-trash" }
       ],
       data: []
     };
 
   }
-  // 组件加载中事件
+
+  /**
+   * 组件加载完事件  
+   */
   componentDidMount() {
     $.get(this.props.source, function (result) {
       console.log(result);
@@ -27,6 +33,9 @@ class AccountList extends React.Component {
     }.bind(this));
   }
 
+  /**
+   * 组件渲染事件  
+   */
   render() {
     return (
       <div id="window-main-table-container">
