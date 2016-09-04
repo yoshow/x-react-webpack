@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
 
 import TopContainer from '../shared/layouts/TopContainer';
@@ -23,7 +23,7 @@ class App extends React.Component {
         <div className="web-container" >
           <ApplicationMenu />
           <ApplicationMenuHandleBar />
-          <AccountComponent />
+          {this.props.children}
         </div>
       </div>
     );
@@ -34,10 +34,35 @@ class Home extends React.Component {
   render() {
     console.log('Home');
     return (
-      <div className="web-body">Home</div>
+          <AccountComponent />
     );
   }
 }
+
+const Membership1 = ({ children }) => (
+  <div>
+    <h2>Membership</h2>
+    {children}
+  </div>
+)
+
+const Account = ({ children }) => (
+  <div>
+    <h2>Account</h2>
+  </div>
+)
+
+const AccountList = ({ children }) => (
+  <div>
+    <h2>AccountList</h2>
+  </div>
+)
+
+const AccountDetail = ({ children }) => (
+  <div>
+    <h2>AccountDetail</h2>
+  </div>
+)
 
 class About extends React.Component {
   render() {
@@ -57,12 +82,17 @@ class Inbox extends React.Component {
   }
 }
 
-ReactDOM.render((
+render((
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="inbox" component={Inbox} />
-      <Route path="about" component={About} />
       <IndexRoute component={Home} />
+      <Route path="membership" component={Membership1} >
+        <Route path="accounts" component={Account} >
+          <IndexRoute component={AccountList} />
+          <Route path=":id" component={AccountDetail} />
+        </Route>
+      </Route>
+      <Route path="inbox" component={Inbox} />
     </Route>
   </Router>),
   document.getElementById('container')

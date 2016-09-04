@@ -33,7 +33,7 @@ class AccountList extends React.Component {
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
         {
           this.state.data.map(function (item) {
-            console.log(item);
+            // console.log(item);
             return <div key={item.name}>{item.name}</div>
           })
         }

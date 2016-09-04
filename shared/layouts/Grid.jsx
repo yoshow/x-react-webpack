@@ -53,7 +53,7 @@ class Grid extends React.Component {
             <tbody>
               {
                 this.state.data.map(function (node) {
-                  console.log(node);
+                  // console.log(node);
                   return (
                     <tr>
                       <td><span >{node.name}</span></td>
