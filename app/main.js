@@ -7,6 +7,8 @@ import TopContainer from '../shared/layouts/TopContainer';
 import ApplicationMenu from '../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar';
 
+import SignIn from './Account/SignIn';
+
 import AccountComponent from './Membership/AccountComponent';
 
 class App extends React.Component {
@@ -82,6 +84,13 @@ class Inbox extends React.Component {
   }
 }
 
+const AccountPkg = ({ children }) => (
+  <div>
+    <h2>Account</h2>
+    {children}
+  </div>
+)
+
 render((
   <Router history={hashHistory}>
     <Route path="/" component={App}>
@@ -93,6 +102,8 @@ render((
         </Route>
       </Route>
       <Route path="inbox" component={Inbox} />
+    </Route><Route path="/account" component={AccountPkg}>
+      <Route path="sign-in" component={SignIn} />
     </Route>
   </Router>),
   document.getElementById('container')

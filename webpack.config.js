@@ -1,9 +1,13 @@
 var path = require('path');
 
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ReactToHtmlPlugin = require('react-to-html-webpack-plugin');
+
 var commonLoaders = [
-	{ test: /\.js$/, loader: "jsx-loader" },
-	{ test: /\.png$/, loader: "url-loader" },
-	{ test: /\.jpg$/, loader: "file-loader" },
+  { test: /\.js$/, loader: "jsx-loader" },
+  { test: /\.png$/, loader: "url-loader" },
+  { test: /\.jpg$/, loader: "file-loader" },
 ];
 
 var assetsPath = path.join(__dirname, "public", "assets");
@@ -14,9 +18,6 @@ module.exports = [{
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: "bundle.js"
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
   },
   module: {
     loaders: [
@@ -31,9 +32,15 @@ module.exports = [{
           ]
         }
       },
-      { test: /\.css$/, loader: "style!css" }
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') }, 
     ]
   },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
+  plugins: [
+    new ExtractTextPlugin('style.css', { allChunks: true })
+  ],
   devServer: {
     proxy: {
       '/api/': {
@@ -61,23 +68,5 @@ module.exports = [{
         }
       }
     }
-  }},
-  
-	{
-		// The configuration for the server-side rendering
-		name: "server-side rendering",
-		entry: "./server/page.js",
-		target: "node",
-		output: {
-			path: assetsPath,
-			filename: "../../server/page.generated.js",
-			publicPath: publicPath,
-			libraryTarget: "commonjs2"
-		},
-		externals: /^[a-z\-0-9]+$/,
-		module: {
-			loaders: commonLoaders.concat([
-				{ test: /\.css$/,  loader: path.join(__dirname, "server", "style-collector") + "!css-loader" },
-			])
-		}
-	}];
+  }
+}];

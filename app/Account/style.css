@@ -1,0 +1,37 @@
+/**********************************************************
+
+CSS Document 2.0
+
+default / style.css
+
+**********************************************************/
+html,
+body {
+  color: #000000;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  font: 12px/1.5 tahoma, helvetica, arial, "Hiragino Sans GB", "微软雅黑", "宋体", sans-serif;
+}
+body * {
+  vertical-align: baseline;
+}
+input[type="text"]:focus,
+input[type="password"]:focus {
+  background-color: #faffbd;
+}
+
+.window-sign-in-main-wrapper {
+  widtH: 780px;
+  /* border:1px solid #f00; */
+  margin: auto;
+}
+.window-sign-in-form-wrapper {
+
+}
+.window-sign-in-form-wrapper a {
+  color: #000;
+}
+.window-sign-in-form-wrapper a:hover {
+  color: #b92f2f;
+}
