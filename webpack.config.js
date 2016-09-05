@@ -1,5 +1,9 @@
 var path = require('path');
 
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ReactToHtmlPlugin = require('react-to-html-webpack-plugin');
+
 var commonLoaders = [
   { test: /\.js$/, loader: "jsx-loader" },
   { test: /\.png$/, loader: "url-loader" },
@@ -15,9 +19,6 @@ module.exports = [{
     path: path.resolve(__dirname, 'build'),
     filename: "bundle.js"
   },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  },
   module: {
     loaders: [
       {
@@ -31,9 +32,15 @@ module.exports = [{
           ]
         }
       },
-      { test: /\.css$/, loader: "style!css" }
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') }, 
     ]
   },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
+  plugins: [
+    new ExtractTextPlugin('style.css', { allChunks: true })
+  ],
   devServer: {
     proxy: {
       '/api/': {
