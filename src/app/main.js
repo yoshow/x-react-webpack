@@ -1,4 +1,6 @@
 
+import app from './config'
+
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
@@ -7,13 +9,28 @@ import TopContainer from '../shared/layouts/TopContainer';
 import ApplicationMenu from '../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar';
 
-import SignIn from './Account/SignIn';
-
 import AccountComponent from './Membership/AccountComponent';
 
-class App extends React.Component {
+class AppView extends React.Component {
+  /**
+   * 构造函数
+   */
+  constructor(props) {
+    super(props);
+  }
+
+  /**
+   * 构造函数
+   */
   render() {
     console.log('App');
+    x.debug.log(app);
+
+    if (!localStorage['session-access-token']) {
+      location.href = "account/sign-in.html?returnUrl=" + location.href;
+      return;
+    }
+
     return (
       <div className="web-body">
         <div className="header" >
@@ -32,11 +49,31 @@ class App extends React.Component {
   }
 }
 
+class DetailView extends React.Component {
+  /**
+   * 构造函数
+   */
+  constructor(props) {
+    super(props);
+  }
+
+  /**
+   * 构造函数
+   */
+  render() {
+    console.log('DetailView');
+    return (
+      <div className="web-body">
+      </div>
+    );
+  }
+}
+
 class Home extends React.Component {
   render() {
     console.log('Home');
     return (
-          <AccountComponent />
+      <AccountComponent />
     );
   }
 }
@@ -93,7 +130,7 @@ const AccountPkg = ({ children }) => (
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={App}>
+    <Route path="/" component={AppView}>
       <IndexRoute component={Home} />
       <Route path="membership" component={Membership1} >
         <Route path="accounts" component={Account} >
@@ -102,8 +139,6 @@ render((
         </Route>
       </Route>
       <Route path="inbox" component={Inbox} />
-    </Route><Route path="/account" component={AccountPkg}>
-      <Route path="sign-in" component={SignIn} />
     </Route>
   </Router>),
   document.getElementById('container')

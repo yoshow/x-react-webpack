@@ -19,7 +19,6 @@ class AccountList extends React.Component {
       ],
       data: []
     };
-
   }
 
   /**

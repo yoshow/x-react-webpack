@@ -1,0 +1,6 @@
+
+module.exports = {
+  name:"a",
+  // client id
+  clientId:"9b722c14-9e93-46aa-a4fc-ad2b2f790c19"
+};
