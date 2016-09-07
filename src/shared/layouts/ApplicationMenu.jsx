@@ -6,22 +6,59 @@ const ACTIVE = { color: 'red' }
 class ApplicationMenu extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [] };
+    this.state = { data: [], html: '' };
+    x.debug.log(props);
+  }
+
+  /**
+   * 组件加载完事件  
+   */
+  componentDidMount() {
+    var outString = '<?xml version="1.0" encoding="utf-8" ?>';
+
+    outString += '<request>';
+    outString += '<query>';
+    outString += '<where>';
+    outString += '<key name="ApplicationId" ><![CDATA[' + this.props.applicationId + ']]></key>';
+    // outString += '<key name="ParentId" ><![CDATA[' + this.props.parentId + ']]></key>';
+    outString += '<key name="MenuType" ><![CDATA[ApplicationMenu]]></key>';
+    outString += '<key name="Status" ><![CDATA[1]]></key>';
+    outString += '<status><![CDATA[1]]></status>';
+    outString += '</where>';
+    outString += '<orders><![CDATA[OrderId]]></orders>';
+    outString += '</query>';
+    outString += '</request>';
+    //" ApplicationId = ##{0}## AND ParentId=##{1}## AND MenuType = ##ApplicationMenu## AND Status = 1 ORDER BY OrderId "
+
+    x.net.xhr('/api/application.menu.findAll.aspx', outString, function (response) {
+      // console.log(response);
+      var result = x.toJSON(response);
+
+      this.setState({ data: result.data });
+    }.bind(this));
+
+    x.debug.log("ApplicationMenu componentDidMount.");
   }
 
   render() {
     return (
       <div id="windowApplicationMenuContainer" className="x-ui-pkg-menu-slide-menu-container">
         <div id="windowApplicationMenuWrapper" className="x-ui-pkg-menu-slide-menu-wrapper">
-          <div className="x-ui-pkg-menu-slide-menu-submenu first-child" ><span>大库引擎</span>
-            <Link id="f8fab120-16d8-40fb-922a-65cc5274e3f5" to="/" ><i className="fa fa-cubes" ></i>  控制台</Link>
-            <Link id="f8fab120-16d8-40fb-922a-65cc5274e3f5" to="/about" ><i className="fa fa-users" ></i>  人像库管理</Link>
-            <Link id="f8fab120-16d8-40fb-922a-65cc5274e3f5" to="/inbox" ><i className="fa fa-tasks" ></i>  任务管理</Link>
-            <a href="/" target="_self" ><i className="fa fa-cubes" ></i>  控制台</a>
-            <a id="0f346e3b-5ba7-4297-836b-0b8cbb09e67d" href="/build" target="_self" ><i className="fa fa-search" ></i>  人像搜索</a>
-            <a id="65eb4641-e62d-4b16-9cc6-1cd6564f97fb" href="inbox" target="_self" className="current" ><i className="fa fa-users" ></i>  人像库管理</a>
-            <a id="ec0b1929-2428-494f-85dd-50c6c7ab6611" href="/about" target="_self" ><i className="fa fa-tasks" ></i>  任务管理</a>
-          </div>
+          <div className="x-ui-pkg-menu-slide-menu-submenu first-child" ><span>大库引擎</span></div>
+          {
+            this.state.data.map(function (item) {
+              // console.log(item);
+              if (item.displayType == 'MenuGroup') {
+                return <div key={item.id} className="x-ui-pkg-menu-slide-menu-submenu" ><span key={item.key} >{item.Name}</span></div>
+              }
+              else if (item.displayType == 'MenuSplitLine') {
+
+              }
+              else {
+                return <div key={item.id}><Link id={item.id} to={item.url} ><i className={item.iconPath} ></i> {item.name}</Link></div>
+              }
+            })
+          }
         </div>
       </div>
     );

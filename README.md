@@ -1,5 +1,7 @@
+
 npm install
 
+启动 webpack-dev-server
 npm start
 
-http://localhost:8080/build/
+http://localhost:8080/

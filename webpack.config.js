@@ -53,11 +53,24 @@ module.exports = [{
       inject: true,
       chunks: ['index']
     }),
-
     // 登陆页面
     new HtmlWebpackPlugin({
-      filename: 'account/sign-in.html',               // http访问路径
-      template: './src/html/account/sign-in.html',   // 实际文件路径
+      filename: 'account/sign-in.html',    
+      template: './src/html/account/sign-in.html',
+      inject: true,
+      chunks: ['login']
+    }),
+    // 应用管理页面
+    new HtmlWebpackPlugin({
+      filename: 'applications/index.html',    
+      template: './src/html/applications/index.html',
+      inject: true,
+      chunks: ['login']
+    }),
+    // 人员及权限管理页面
+    new HtmlWebpackPlugin({
+      filename: 'membership/index.html',    
+      template: './src/html/membership/index.html',
       inject: true,
       chunks: ['login']
     })

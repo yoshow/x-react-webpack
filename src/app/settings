@@ -1,0 +1,12 @@
+
+module.exports = {
+  name:"a",
+  // client id
+  clientId:"9b722c14-9e93-46aa-a4fc-ad2b2f790c19",
+  // application id
+  applications :{
+    "ApplicationManagement":"00000000-0000-0000-0000-000000000001",
+    "Membership":"00000000-0000-0000-0000-000000000002",
+    "BigDb":"b69db4ff-9ae4-4269-9260-05e28ea923b5"
+  }
+};

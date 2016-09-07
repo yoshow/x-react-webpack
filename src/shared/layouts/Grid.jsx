@@ -46,7 +46,7 @@ class Grid extends React.Component {
                     widthValue = { width: node.width };
                   }
 
-                  return (<col style={widthValue} />);
+                  return (<col key={node.name} style={widthValue} />);
                 })
               }
             </colgroup>
@@ -55,7 +55,7 @@ class Grid extends React.Component {
                 this.state.data.map(function (node) {
                   // console.log(node);
                   return (
-                    <tr>
+                    <tr key={node.name} >
                       <td><span >{node.name}</span></td>
                     </tr>
                   );

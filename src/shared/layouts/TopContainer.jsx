@@ -1,5 +1,7 @@
 import React from 'react';
 
+import TopMenu from './TopMenu';
+
 class TopContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -16,11 +18,7 @@ class TopContainer extends React.Component {
             <a href="/" className="navbar-brand"><img alt="Brand" src="/resources/images/corporation/default/corporation.logo.png" /></a>
           </div>
           <div className="navbar-collapse collapse">
-            <ul className="nav navbar-nav">
-              {
-                // top menu
-              }
-            </ul>
+            <TopMenu />
             <ul className="nav navbar-nav navbar-right">
               <li className="dropdown">
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-user"></i> <strong>Name</strong></a>

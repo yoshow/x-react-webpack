@@ -1,4 +1,4 @@
-import app from '../config'
+import settings from '../settings'
 
 import styles from './style.css';
 
@@ -53,7 +53,7 @@ class SignIn extends React.Component {
             <a href="account/sign-up.html">注册新帐号</a>
           </div>
         </div>
-        <input id="session-client-id" name="session-client-id" type="hidden" value={app.clientId} />
+        <input id="session-client-id" name="session-client-id" type="hidden" value={settings.clientId} />
       </div>
     );
   }
