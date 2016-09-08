@@ -6,14 +6,17 @@ import Mask from '../../shared/layouts/Mask';
 import AccountForm from './AccountForm';
 import AccountList from './AccountList';
 
-class AccountComponent extends React.Component {
-  componentDidMount() {
+class AccountComponent extends React.Component
+{
+  componentDidMount()
+  {
     this.div = document.createElement('div');
     document.body.appendChild(this.div);
     // this.renderModel(this.props);
   }
 
-  render() {
+  render()
+  {
     return (
       <div id="window-container" className="window-container">
         <div id="window-main-table" className="table">
@@ -37,12 +40,14 @@ class AccountComponent extends React.Component {
     );
   }
 
-  handleClick(event) {
+  handleClick(event)
+  {
     console.log('click');
     this.renderModel(this.props);
   }
 
-  renderModel(props) {
+  renderModel(props)
+  {
     var obj = (
       <Mask >
         <AccountForm props={props} />

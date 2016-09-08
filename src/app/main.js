@@ -10,11 +10,13 @@ import TopContainer from '../shared/layouts/TopContainer';
 import ApplicationMenu from '../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar';
 
-import Applications from './applications/AppMainContainer';
-import BigDb from './bigdb/AppMainComponent';
+import Applications from './applications/ApplicationComponent';
+import BigDb from './bigdb/ApplicationComponent';
 
-class Home extends React.Component {
-  render() {
+class Home extends React.Component
+{
+  render()
+  {
     console.log('Home');
     return (
       <div className="web-container" >
@@ -35,13 +37,16 @@ const ApplicationsView = ({ children }) => (
   </div>
 )
 
-class MembershipView extends React.Component {
-  componentDidMount() {
+class MembershipView extends React.Component
+{
+  componentDidMount()
+  {
     console.log('MembershipView-componentDidMount');
     masterpage.resize();
   }
 
-  render() {
+  render()
+  {
     console.log('MembershipView-render');
     return (<div className="web-container" >
       <ApplicationMenu applicationId="00000000-0000-0000-0000-000000000002" />
@@ -51,22 +56,6 @@ class MembershipView extends React.Component {
       </div>
       {this.props.children}
     </div>);
-  }
-}
-
-class BigDbView extends React.Component {
-  componentDidMount() {
-    // console.log('MembershipView-componentDidMount');
-    masterpage.resize();
-  }
-
-  render() {
-    return (
-      <div className="web-container" >
-        <ApplicationMenu applicationId="b69db4ff-9ae4-4269-9260-05e28ea923b5" />
-        <ApplicationMenuHandleBar />
-        {this.props.children}
-      </div>);
   }
 }
 
@@ -91,7 +80,14 @@ const AccountDetail = ({ children }) => (
 render((
   <Router history={hashHistory}>
     <Route path="/" component={App.AppView}>
-      <Route path="applications" component={Applications} >
+      <Route path="applications" component={Applications.ApplicationComponent} >
+        <IndexRoute component={Applications.ApplicationList} />
+        <Route path="application-option" component={Applications.ApplicationOptionList} >
+          <Route path="list" component={Applications.ApplicationOptionList} />
+        </Route>
+        <Route path="application-method" component={Applications.ApplicationMethodList} >
+          <Route path="list" component={Applications.ApplicationMethodList} />
+        </Route>
       </Route>
       <Route path="membership" component={MembershipView} >
         <Route path="accounts" component={Account} >
@@ -99,9 +95,12 @@ render((
           <Route path=":id" component={AccountDetail} />
         </Route>
       </Route>
-      <Route path="bigdb" component={BigDb.AppMainComponent} >
+      <Route path="bigdb" component={BigDb.ApplicationComponent} >
         <IndexRoute component={BigDb.TerminalComponent} />
-        <Route path="bank" component={BigDb.BankComponent} />
+        <Route path="search" component={BigDb.SearchComponent} />
+        <Route path="bank" component={BigDb.BankComponent} >
+          <Route path="list" component={BigDb.BankList} />
+        </Route>
       </Route>
     </Route>
   </Router>),

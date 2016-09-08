@@ -10,7 +10,7 @@ class AppView extends React.Component {
     super(props);
   }
   componentDidMount() {
-    console.log('componentDidMount - App View');
+    console.log('app.view.componentDidMount');
     // masterpage.resize();
   }
 
@@ -18,7 +18,7 @@ class AppView extends React.Component {
    * 构造函数
    */
   render() {
-    console.log('render - App View');
+    console.log('app.view.render');
     // x.debug.log(app);
 
     // 未验证登陆
@@ -53,7 +53,7 @@ class AppDetailView extends React.Component {
    * 构造函数
    */
   render() {
-    console.log('DetailView');
+    console.log('app.detail.view');
     return (
       <div className="web-body">
       </div>

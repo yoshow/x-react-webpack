@@ -1,12 +1,18 @@
 import React from 'react';
 
-class Grid extends React.Component {
-  constructor(props) {
+class Grid extends React.Component
+{
+  constructor(props)
+  {
     super(props);
+
     this.state = { columns: props.columns, data: props.data };
+
+    // console.log(data);
   }
 
-  render() {
+  render()
+  {
     return (
       <div className="table-freeze">
         <div className="table-freeze-head">
@@ -14,17 +20,21 @@ class Grid extends React.Component {
             <thead>
               <tr>
                 {
-                  this.state.columns.map(function (node) {
+                  this.state.columns.map(function (node)
+                  {
                     var widthValue = {};
 
-                    if (node.width) {
+                    if (node.width)
+                    {
                       widthValue = { width: node.width };
                     }
 
-                    if (node.icon) {
+                    if (node.icon)
+                    {
                       return (<th key={node.name} style={widthValue} title={node.name} ><i className={node.icon}></i></th>);
                     }
-                    else {
+                    else
+                    {
                       return (<th key={node.name} style={widthValue} title={node.name} >{node.name}</th>);
                     }
                   })
@@ -39,10 +49,12 @@ class Grid extends React.Component {
           <table className="table table-striped">
             <colgroup>
               {
-                this.state.columns.map(function (node) {
+                this.state.columns.map(function (node)
+                {
                   var widthValue = {};
 
-                  if (node.width) {
+                  if (node.width)
+                  {
                     widthValue = { width: node.width };
                   }
 
@@ -52,14 +64,44 @@ class Grid extends React.Component {
             </colgroup>
             <tbody>
               {
-                this.state.data.map(function (node) {
-                  // console.log(node);
+                this.state.data.map(function (node)
+                {
                   return (
-                    <tr key={node.name} >
-                      <td><span >{node.name}</span></td>
+                    <tr key={"r-" + node.reactKey} >
+                      {
+                        this.state.columns.map(function (column)
+                        {
+                          var key = 'r-' + node.reactKey + "-c-" + column.reactKey;
+
+                          if (column.action)
+                          {
+                            // 操作列
+                            return (
+                              <td key={key} >
+                                <a href="javascript:void(0);" onClick={() => { column.handle(node) } } title={column.name} ><i className={column.icon} ></i></a>
+                              </td>
+                            )
+                          }
+                          else if (!column.field || column.field == '')
+                          {
+                            return (<td key={key} ></td>)
+                          }
+                          else
+                          {
+                            if (column.render)
+                            {
+                              return (<td key={key} > { column.render(node[column.field]) } </td>)
+                            }
+                            else
+                            {
+                              return (<td key={key} > { node[column.field]} </td>)
+                            }
+                          }
+                        })
+                      }
                     </tr>
-                  );
-                })
+                  )
+                }.bind(this))
               }
             </tbody>
           </table>
@@ -68,12 +110,39 @@ class Grid extends React.Component {
     );
   }
 
-  createBody() {
-    this.state.data.map(function (node) {
-      console.log(item);
+  createRow(node)
+  {
+    console.log(node);
+
+    return (
+      <tr key={"application" + node.id} >
+        <td key={ node.id} >{node['applicationDisplayName']}</td>
+      </tr>
+    );
+  }
+
+  createBody()
+  {
+    // console.log(columns);
+    this.state.data.map(function (node)
+    {
+      console.log(node);
       return (
-        <tr id="data-row-{node.id}" >
-          <td><span >{node.name}</span></td>
+        <tr key={node.name} >
+          {
+            this.columns.map(function (column)
+            {
+              if (!column.field || column.field == '')
+              {
+                return (<td key={column.id} ></td>);
+              }
+              else
+              {
+                console.log(column);
+                return (<td key={column.id + '' + node.id} >{node[column.field]}</td>);
+              }
+            })
+          }
         </tr>
       );
     });
