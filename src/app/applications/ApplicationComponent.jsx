@@ -46,12 +46,12 @@ class ApplicationList extends React.Component
     super(props);
     this.state = {
       columns: [
-        { "name": "名称", "field": "applicationName" },
-        { "name": "状态", "width": "60px" },
-        { "name": "操作", "width": "60px" },
-        { "name": "编辑", "width": "30px", icon: "fa fa-edit" },
-        { "name": "复制", "width": "30px", icon: "fa fa-copy" },
-        { "name": "删除", "width": "30px", icon: "fa fa-trash" }
+        {reactKey: 0, "name": "名称", "field": "applicationName" },
+        {reactKey: 1, "name": "状态", "width": "60px" },
+        {reactKey: 2, "name": "操作", "width": "60px" },
+        {reactKey: 3, "name": "编辑", "width": "30px", icon: "fa fa-edit" },
+        {reactKey: 4, "name": "复制", "width": "30px", icon: "fa fa-copy" },
+        {reactKey: 5, "name": "删除", "width": "30px", icon: "fa fa-trash" }
       ],
       data: []
     };
@@ -78,6 +78,12 @@ class ApplicationList extends React.Component
       callback: function (response)
       {
         var result = x.toJSON(response);
+
+        // 设置 reactKey 
+        result.data.forEach(function (node)
+        {
+          node.reactKey = node.id;
+        });
 
         // var paging = main.applications.home.paging;
 

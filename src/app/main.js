@@ -3,7 +3,9 @@ import settings from './settings'
 
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } from 'react-router'
+import { useTransitions, withTransition } from 'react-router-transitions';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import App from '../shared/layouts/App';
 import TopContainer from '../shared/layouts/TopContainer';
@@ -13,10 +15,8 @@ import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar
 import Applications from './applications/ApplicationComponent';
 import BigDb from './bigdb/ApplicationComponent';
 
-class Home extends React.Component
-{
-  render()
-  {
+class Home extends React.Component {
+  render() {
     console.log('Home');
     return (
       <div className="web-container" >
@@ -37,16 +37,13 @@ const ApplicationsView = ({ children }) => (
   </div>
 )
 
-class MembershipView extends React.Component
-{
-  componentDidMount()
-  {
+class MembershipView extends React.Component {
+  componentDidMount() {
     console.log('MembershipView-componentDidMount');
     masterpage.resize();
   }
 
-  render()
-  {
+  render() {
     console.log('MembershipView-render');
     return (<div className="web-container" >
       <ApplicationMenu applicationId="00000000-0000-0000-0000-000000000002" />
@@ -78,7 +75,29 @@ const AccountDetail = ({ children }) => (
 )
 
 render((
-  <Router history={hashHistory}>
+  <Router history={hashHistory}
+    render={applyRouterMiddleware(useTransitions({
+      TransitionGroup: ReactCSSTransitionGroup,
+      onShow(prevState, nextState, replaceTransition) {
+        return {
+          transitionName: `show-${nextState.children.props.route.transition}`,
+          transitionEnterTimeout: 500,
+          transitionLeaveTimeout: 300,
+        };
+      },
+      onDismiss(prevState, nextState, replaceTransition) {
+        return {
+          transitionName: `dismiss-${prevState.children.props.route.transition}`,
+          transitionEnterTimeout: 500,
+          transitionLeaveTimeout: 300,
+        };
+      },
+      defaultTransition: {
+        transitionName: 'fade',
+        transitionEnterTimeout: 500,
+        transitionLeaveTimeout: 300,
+      }
+    })) }>
     <Route path="/" component={App.AppView}>
       <Route path="applications" component={Applications.ApplicationComponent} >
         <IndexRoute component={Applications.ApplicationList} />

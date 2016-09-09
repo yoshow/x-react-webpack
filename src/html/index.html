@@ -7,17 +7,114 @@
   <link rel="stylesheet" media="all" href="/resources/bootstrap/css/bootstrap.css" type="text/css" />
   <link rel="stylesheet" media="all" href="/resources/font-awesome/css/font-awesome.css" type="text/css" />
   <link rel="stylesheet" media="all" href="assets/styles/styles.min.css" type="text/css" />
-  
-  <script type="text/javascript" id="i18n-script" src="/locales/zh-CN/i18n.js" ></script>
+
+  <script type="text/javascript" id="i18n-script" src="/locales/zh-CN/i18n.js"></script>
   <script type="text/javascript" id="jquery-script" src="/resources/scripts/webcomponentsjs/webcomponents-lite.min.js"></script>
   <script type="text/javascript" src="/resources/scripts/jquery-1.11.2.min.js" charset="utf-8"></script>
   <script type="text/javascript" id="bootstrap-script" src="/resources/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" id="x-client-api-core-script" src="/resources/scripts/x-client-api-core.zh-cn.min.js"></script>
+  <script type="text/javascript" id="x-client-api-ui-script" src="/resources/scripts/x-client-api-ui.zh-cn.min.js"></script>
   <script type="text/javascript" src="assets/masterpage.js" charset="utf-8"></script>
+
+  <style>
+    .sk-wave {
+      margin: 40px auto;
+      width: 50px;
+      height: 40px;
+      text-align: center;
+      font-size: 10px;
+    }
+    
+    .sk-wave .sk-rect {
+      background-color: #666;
+      height: 100%;
+      width: 6px;
+      display: inline-block;
+      -webkit-animation: sk-waveStretchDelay 1.2s infinite ease-in-out;
+      animation: sk-waveStretchDelay 1.2s infinite ease-in-out;
+    }
+    
+    .sk-wave .sk-rect1 {
+      -webkit-animation-delay: -1.2s;
+      animation-delay: -1.2s;
+    }
+    
+    .sk-wave .sk-rect2 {
+      -webkit-animation-delay: -1.1s;
+      animation-delay: -1.1s;
+    }
+    
+    .sk-wave .sk-rect3 {
+      -webkit-animation-delay: -1s;
+      animation-delay: -1s;
+    }
+    
+    .sk-wave .sk-rect4 {
+      -webkit-animation-delay: -0.9s;
+      animation-delay: -0.9s;
+    }
+    
+    .sk-wave .sk-rect5 {
+      -webkit-animation-delay: -0.8s;
+      animation-delay: -0.8s;
+    }
+    
+    @-webkit-keyframes sk-waveStretchDelay {
+      0%,
+      40%,
+      100% {
+        -webkit-transform: scaleY(0.4);
+        transform: scaleY(0.4);
+      }
+      20% {
+        -webkit-transform: scaleY(0.6);
+        transform: scaleY(0.6);
+      }
+    }
+    
+    @keyframes sk-waveStretchDelay {
+      0%,
+      40%,
+      100% {
+        -webkit-transform: scaleY(0.4);
+        transform: scaleY(0.4);
+      }
+      20% {
+        -webkit-transform: scaleY(0.6);
+        transform: scaleY(0.6);
+      }
+    }
+    
+    .example-enter {
+      opacity: 0.01;
+    }
+    
+    .example-enter.example-enter-active {
+      opacity: 1;
+      transition: opacity 500ms ease-in;
+    }
+    
+    .example-leave {
+      opacity: 1;
+    }
+    
+    .example-leave.example-leave-active {
+      opacity: 0.01;
+      transition: opacity 300ms ease-in;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="container">loading...</div>
+  <div id="container">
+    <div class="sk-wave">
+      <div class="sk-rect sk-rect1"></div>
+      <div class="sk-rect sk-rect2"></div>
+      <div class="sk-rect sk-rect3"></div>
+      <div class="sk-rect sk-rect4"></div>
+      <div class="sk-rect sk-rect5"></div>
+    </div>
+  </div>
   <script type="text/javascript" src="main-bundle.js" charset="utf-8"></script>
 </body>
 

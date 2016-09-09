@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import TopContainer from './TopContainer';
 
@@ -26,7 +27,6 @@ class AppView extends React.Component {
       location.href = "account/sign-in.html?returnUrl=" + location.href;
       return;
     }
-
     return (
       <div className="web-body">
         <div className="header" >
@@ -35,7 +35,12 @@ class AppView extends React.Component {
           </div>
         </div>
         <div className="header-placeholder" ></div>
-        {this.props.children}
+        <ReactCSSTransitionGroup
+          transitionName="example"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
+          {this.props.children}
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
