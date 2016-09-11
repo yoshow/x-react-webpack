@@ -15,6 +15,8 @@ import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar
 import Applications from './applications/ApplicationComponent';
 import BigDb from './bigdb/ApplicationComponent';
 
+import Membership from './membership/ApplicationComponent';
+
 class Home extends React.Component {
   render() {
     console.log('Home');
@@ -36,25 +38,6 @@ const ApplicationsView = ({ children }) => (
     {children}
   </div>
 )
-
-class MembershipView extends React.Component {
-  componentDidMount() {
-    console.log('MembershipView-componentDidMount');
-    masterpage.resize();
-  }
-
-  render() {
-    console.log('MembershipView-render');
-    return (<div className="web-container" >
-      <ApplicationMenu applicationId="00000000-0000-0000-0000-000000000002" />
-      <ApplicationMenuHandleBar />
-      <div>
-        <h2>Membership</h2>
-      </div>
-      {this.props.children}
-    </div>);
-  }
-}
 
 const Account = ({ children }) => (
   <div>
@@ -108,11 +91,13 @@ render((
           <Route path="list" component={Applications.ApplicationMethodList} />
         </Route>
       </Route>
-      <Route path="membership" component={MembershipView} >
+      <Route path="membership" component={Membership.ApplicationComponent} >
         <Route path="accounts" component={Account} >
           <IndexRoute component={AccountList} />
           <Route path=":id" component={AccountDetail} />
         </Route>
+        <Route path="computer/list" component={Membership.ComputerList} />
+        <Route path="computer/form/:id" component={Membership.ComputerForm} />
       </Route>
       <Route path="bigdb" component={BigDb.ApplicationComponent} >
         <IndexRoute component={BigDb.TerminalComponent} />

@@ -117,7 +117,7 @@ class ApplicationMethodList extends React.Component {
   render() {
     x.debug.log('application.method.list.render');
     return (
-      <MainContainer name="应用方法管理" pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="应用方法管理" tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );

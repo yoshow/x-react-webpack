@@ -35,12 +35,7 @@ class AppView extends React.Component {
           </div>
         </div>
         <div className="header-placeholder" ></div>
-        <ReactCSSTransitionGroup
-          transitionName="example"
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={300}>
-          {this.props.children}
-        </ReactCSSTransitionGroup>
+        { this.props.children }
       </div>
     );
   }
