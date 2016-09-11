@@ -1,42 +1,15 @@
+
 import settings from '../settings'
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } from 'react-router'
 
+import MainContainer from '../../shared/layouts/MainContainer';
 import Grid from '../../shared/layouts/Grid';
 import Mask from '../../shared/layouts/Mask';
-import MainContainer from '../../shared/layouts/MainContainer';
 
-import ApplicationMenu from '../../shared/layouts/ApplicationMenu';
-import ApplicationMenuHandleBar from '../../shared/layouts/ApplicationMenuHandleBar';
-
-import { ApplicationOptionList } from './ApplicationOptionComponent';
-import { ApplicationSettingList } from './ApplicationSettingComponent';
-import { ApplicationMenuList, ApplicationMenuForm } from './ApplicationMenuComponent';
-import { ApplicationMethodList } from './ApplicationMethodComponent';
-import { ApplicationEventList } from './ApplicationEventComponent';
-
-class ApplicationComponent extends React.Component {
-  componentDidMount() {
-    this.div = document.createElement('div');
-    document.body.appendChild(this.div);
-    // this.renderModel(this.props);
-  }
-
-  render() {
-    x.debug.log('application.render');
-    x.debug.log(this.props.children);
-    return (
-      <div className="web-container" >
-        <ApplicationMenu applicationId={settings.applications["ApplicationManagement"]} />
-        <ApplicationMenuHandleBar />
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
-class ApplicationList extends React.Component {
+class ApplicationMenuList extends React.Component {
   /**
    * 构造函数
    */
@@ -54,16 +27,18 @@ class ApplicationList extends React.Component {
     this.setTreeViewNode(treeViewRootTreeNodeId);
 
     // 设置 Button 信息
-    this.buttons = [{ name: 'btnCreate', label: '新增', icon: '', handle: function () { console.log('button create'); } }];
+    this.buttons = [{ name: 'btnCreate-2', label: '新增', icon: '', handle: function () { console.log('button create'); } }];
 
     // 设置 State 信息
     this.state = {
+
+      // 配置数据列
       columns: [
-        { reactKey: 0, "name": "应用代码", "width": "80px", "field": "code" },
+        { reactKey: 0, "name": "方法代码", "width": "160px", "field": "code" },
         {
-          reactKey: 1, "name": "应用名称(应用显示名称)", "field": "applicationName",
+          reactKey: 1, "name": "名称", "field": "name",
           render: function (node) {
-            return <a href={"/applications/application/form?id=" + node.id } >{ node.applicationName }({ node.applicationDisplayName }) </a>;
+            return <Link to={"/applications/application-menu/form/" + node.id } >{node.name}</Link>;
           }
         },
         {
@@ -103,25 +78,13 @@ class ApplicationList extends React.Component {
   }
 
   /**
-   * 组件加载完事件  
+   * 组件加载完事件    
    */
   componentDidMount() {
 
     this.getPaging(1);
 
     masterpage.resize();
-  }
-
-  /**
-   * 组件渲染事件  
-   */
-  render() {
-    // x.debug.log('application.list.render');
-    return (
-      <MainContainer name="应用配置管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
-        <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
-      </MainContainer>
-    );
   }
 
   /*#region 函数:getPaging(currentPage)*/
@@ -137,7 +100,7 @@ class ApplicationList extends React.Component {
     outString += this.paging.toXml();
     outString += '</request>';
 
-    x.net.xhr('/api/application.query.aspx', outString, {
+    x.net.xhr('/api/application.menu.query.aspx', outString, {
       waitingType: 'mini',
       waitingMessage: i18n.strings.msg_net_waiting_query_tip_text,
       callback: function (response) {
@@ -160,6 +123,27 @@ class ApplicationList extends React.Component {
   }
   /*#endregion*/
 
+  /**
+   * 组件渲染事件    
+   */
+  render() {
+    x.debug.log('application.menu.list.render');
+    return (
+      <MainContainer name="应用菜单管理" tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+        <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
+      </MainContainer>
+    );
+  }
+
+  /*#region 函数:confirmDelete(id)*/
+  /*
+  * 删除对象
+  */
+  confirmDelete(id) {
+    x.debug.log('application.menu.list.confirmDelete - ' + id);
+  }
+  /*#endregion*/
+
   /*#region 函数:getTreeView(value)*/
   /*
   * 获取树形菜单
@@ -169,7 +153,7 @@ class ApplicationList extends React.Component {
     var treeViewId = '00000000-0000-0000-0000-000000000001';
     var treeViewName = '应用管理';
     var treeViewRootTreeNodeId = value; // 默认值:'00000000-0000-0000-0000-000000000001'
-    var treeViewUrl = 'javascript:main.applications.application.option.list.setTreeViewNode(\'{treeNodeId}\')';
+    var treeViewUrl = 'javascript:main.applications.application.menu.list.setTreeViewNode(\'{treeNodeId}\')';
 
     var outString = '<?xml version="1.0" encoding="utf-8" ?>';
 
@@ -183,7 +167,7 @@ class ApplicationList extends React.Component {
     outString += '<url><![CDATA[' + treeViewUrl + ']]></url>';
     outString += '</request>';
 
-    var tree = x.ui.pkg.tree.newTreeView({ name: 'main.applications.application.option.list.tree ' });
+    var tree = x.ui.pkg.tree.newTreeView({ name: 'main.applications.application.menu.list.tree' });
 
     tree.setAjaxMode(true);
 
@@ -199,36 +183,38 @@ class ApplicationList extends React.Component {
 
     tree.load('/api/application.getDynamicTreeView.aspx', false, outString);
 
-    x.register('main.applications.application.option.list');
+    x.register('main.applications.application.menu.list');
 
-    window.main.applications.application.option.list.tree = this.tree = tree;
-    window.main.applications.application.option.list.setTreeViewNode = this.setTreeViewNode.bind(this);
+    window.main.applications.application.menu.list.tree = this.tree = tree;
+    window.main.applications.application.menu.list.setTreeViewNode = this.setTreeViewNode.bind(this);
   }
   /*#endregion*/
 
   /*#region 函数:setTreeViewNode(value)*/
   setTreeViewNode(value) {
-    this.paging.query.scence = 'QueryByParentId';
-    this.paging.query.where.ParentId = value;
-    this.paging.query.orders = ' OrderId ';
+    this.paging.query.where.ApplicationId = value;
+    this.paging.query.orders = ' Name ';
 
     this.getPaging(1);
   }
   /*#endregion*/
 }
 
-var styleBorder = { border: '1px solid #ff0' };
-
-class ApplicationForm extends React.Component {
+class ApplicationMenuForm extends React.Component {
   constructor(props) {
-    super(props);
+    super(props); 
+  
+    this.name = 'application.method.list';
     this.state = { name: this.props.name };
     this.handleChange = this.handleChange.bind(this);
+  
+    console.log(this.name +'constructor');
   }
 
   render() {
+    console.log(this.name +'render');
     return (
-      <div style={styleBorder}>
+      <div>
         name: {this.state.name}
         <form className="AccountForm">
           <input type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange.bind(this) } />
@@ -245,13 +231,4 @@ class ApplicationForm extends React.Component {
   }
 }
 
-export default {
-  ApplicationComponent,
-  ApplicationList,
-  ApplicationOptionList,
-  ApplicationSettingList,
-  ApplicationMenuList, 
-  ApplicationMenuForm,
-  ApplicationMethodList,
-  ApplicationEventList
-};
+export { ApplicationMenuList, ApplicationMenuForm };

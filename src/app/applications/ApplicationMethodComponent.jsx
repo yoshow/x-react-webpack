@@ -9,15 +9,29 @@ import Grid from '../../shared/layouts/Grid';
 import Mask from '../../shared/layouts/Mask';
 
 class ApplicationMethodList extends React.Component {
+
   /**
    * 构造函数
    */
   constructor(props) {
     super(props);
 
+    this.name = 'application.method.list';
+
     // 分页对象
     this.paging = x.page.newPagingHelper(50);
 
+    // 设置 TreeView 信息
+    var treeViewRootTreeNodeId = '00000000-0000-0000-0000-000000000001';
+
+    this.getTreeView(treeViewRootTreeNodeId);
+
+    this.setTreeViewNode(treeViewRootTreeNodeId);
+
+    // 设置 Button 信息
+    this.buttons = [{ name: 'btnCreate-1', label: '新增', icon: '', handle: function () { console.log('button create'); } }];
+
+    // 设置 State 信息
     this.state = {
 
       // 配置数据列
@@ -72,7 +86,7 @@ class ApplicationMethodList extends React.Component {
 
     this.getPaging(1);
 
-        masterpage.resize();
+    masterpage.resize();
   }
 
   /*#region 函数:getPaging(currentPage)*/
@@ -92,7 +106,7 @@ class ApplicationMethodList extends React.Component {
       waitingType: 'mini',
       waitingMessage: i18n.strings.msg_net_waiting_query_tip_text,
       callback: function (response) {
-        
+
         var result = x.toJSON(response);
 
         // 设置 reactKey 
@@ -102,7 +116,7 @@ class ApplicationMethodList extends React.Component {
 
         this.paging.load(result.paging);
 
-        this.refs.main.setState({ pagingData: this.paging });
+        this.refs.main.setState({ buttons: this.buttons, pagingData: this.paging });
 
         this.refs.grid.setState({ data: result.data });
 
@@ -117,12 +131,13 @@ class ApplicationMethodList extends React.Component {
   render() {
     x.debug.log('application.method.list.render');
     return (
-      <MainContainer name="应用方法管理" tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="应用方法管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );
   }
-  /*#region 函数:confirmDelete(ids)*/
+
+  /*#region 函数:confirmDelete(id)*/
   /*
   * 删除对象
   */
@@ -131,6 +146,60 @@ class ApplicationMethodList extends React.Component {
   }
   /*#endregion*/
 
+  /*#region 函数:getTreeView(value)*/
+  /*
+  * 获取树形菜单
+  */
+  getTreeView(value) {
+
+    var treeViewId = '00000000-0000-0000-0000-000000000001';
+    var treeViewName = '应用管理';
+    var treeViewRootTreeNodeId = value; // 默认值:'00000000-0000-0000-0000-000000000001'
+    var treeViewUrl = 'javascript:main.applications.application.option.list.setTreeViewNode(\'{treeNodeId}\')';
+
+    var outString = '<?xml version="1.0" encoding="utf-8" ?>';
+
+    outString += '<request>';
+    outString += '<action><![CDATA[getDynamicTreeView]]></action>';
+    outString += '<treeViewId><![CDATA[' + treeViewId + ']]></treeViewId>';
+    outString += '<treeViewName><![CDATA[' + treeViewName + ']]></treeViewName>';
+    outString += '<treeViewRootTreeNodeId><![CDATA[' + treeViewRootTreeNodeId + ']]></treeViewRootTreeNodeId>';
+    outString += '<tree><![CDATA[{tree}]]></tree>';
+    outString += '<parentId><![CDATA[{parentId}]]></parentId>';
+    outString += '<url><![CDATA[' + treeViewUrl + ']]></url>';
+    outString += '</request>';
+
+    var tree = x.ui.pkg.tree.newTreeView({ name: 'main.applications.application.option.list.tree ' });
+
+    tree.setAjaxMode(true);
+
+    tree.add({
+      id: "0",
+      parentId: "-1",
+      name: treeViewName,
+      url: treeViewUrl.replace('{treeNodeId}', treeViewRootTreeNodeId),
+      title: treeViewName,
+      target: '',
+      icon: '/resources/images/tree/tree_icon.gif'
+    });
+
+    tree.load('/api/application.getDynamicTreeView.aspx', false, outString);
+
+    x.register('main.applications.application.option.list');
+
+    window.main.applications.application.option.list.tree = this.tree = tree;
+    window.main.applications.application.option.list.setTreeViewNode = this.setTreeViewNode.bind(this);
+  }
+  /*#endregion*/
+
+  /*#region 函数:setTreeViewNode(value)*/
+  setTreeViewNode(value) {
+    this.paging.query.where.ApplicationId = value;
+    this.paging.query.orders = ' Name ';
+
+    this.getPaging(1);
+  }
+  /*#endregion*/
 }
 
 export { ApplicationMethodList };

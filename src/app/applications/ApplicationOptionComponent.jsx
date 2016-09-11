@@ -20,6 +20,7 @@ class ApplicationOptionList extends React.Component {
     // 分页对象
     this.paging = x.page.newPagingHelper(50);
 
+    // 设置 TreeView 信息
     var treeViewRootTreeNodeId = '00000000-0000-0000-0000-000000000001';
 
     this.getTreeView(treeViewRootTreeNodeId);
@@ -192,7 +193,6 @@ class ApplicationOptionList extends React.Component {
     this.getPaging(1);
   }
   /*#endregion*/
-
 }
 
 export { ApplicationOptionList };

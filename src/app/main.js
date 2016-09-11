@@ -13,7 +13,7 @@ import ApplicationMenu from '../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar';
 
 import Applications from './applications/ApplicationComponent';
-import BigDb from './bigdb/ApplicationComponent';
+// import BigDb from './bigdb/ApplicationComponent';
 
 class Home extends React.Component {
   render() {
@@ -74,6 +74,12 @@ const AccountDetail = ({ children }) => (
   </div>
 )
 
+const NoMatch = () => (
+  <div>
+    <h2>No Match</h2>
+  </div>
+)
+
 render((
   <Router history={hashHistory}
     render={applyRouterMiddleware(useTransitions({
@@ -104,8 +110,18 @@ render((
         <Route path="application-option" component={Applications.ApplicationOptionList} >
           <Route path="list" component={Applications.ApplicationOptionList} />
         </Route>
+        <Route path="application-setting" component={Applications.ApplicationSettingList} >
+          <Route path="list" component={Applications.ApplicationSettingList} />
+        </Route>
+        <Route path="application-menu" component={Applications.ApplicationMenuList} >
+          <Route path="list" component={Applications.ApplicationMenuList} />
+        </Route>
+        <Route path="application-menu/form/:id" component={Applications.ApplicationMenuForm} />
         <Route path="application-method" component={Applications.ApplicationMethodList} >
           <Route path="list" component={Applications.ApplicationMethodList} />
+        </Route>
+        <Route path="application-event" component={Applications.ApplicationEventList} >
+          <Route path="list" component={Applications.ApplicationEventList} />
         </Route>
       </Route>
       <Route path="membership" component={MembershipView} >
@@ -114,13 +130,14 @@ render((
           <Route path=":id" component={AccountDetail} />
         </Route>
       </Route>
-      <Route path="bigdb" component={BigDb.ApplicationComponent} >
+      {/**<Route path="bigdb" component={BigDb.ApplicationComponent} >
         <IndexRoute component={BigDb.TerminalComponent} />
         <Route path="search" component={BigDb.SearchComponent} />
         <Route path="bank" component={BigDb.BankComponent} >
           <Route path="list" component={BigDb.BankList} />
         </Route>
-      </Route>
+      </Route>*/}
+      <Route path="*" component={NoMatch}/>
     </Route>
   </Router>),
   document.getElementById('container')

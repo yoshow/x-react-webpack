@@ -20,8 +20,6 @@ class AppView extends React.Component {
    */
   render() {
     console.log('app.view.render');
-    // x.debug.log(app);
-
     // 未验证登陆
     if (!localStorage['session-access-token']) {
       location.href = "account/sign-in.html?returnUrl=" + location.href;
