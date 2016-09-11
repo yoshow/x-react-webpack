@@ -27,7 +27,7 @@ class ApplicationOptionList extends React.Component {
     this.setTreeViewNode(treeViewRootTreeNodeId);
 
     // 设置 Button 信息
-    this.buttons = [{ name: 'btnCreate', label: '新增', icon: '', handle: function () { } }];
+    this.buttons = [{ name: 'btnCreate', label: '新增', icon: '', handle: function () { console.log('button create'); } }];
 
     // 设置 State 信息
     this.state = {

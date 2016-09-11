@@ -8,16 +8,16 @@ class MainContainer extends React.Component {
 
     this.state = {
       name: props.name,
+      buttons: props.buttons,
       tree: props.tree,
       pagingData: props.pagingData,
       pagingHandle: props.pagingHandle
     };
 
-    // console.log(props.paging);
+    console.log(this.state.buttons);
   }
   componentDidMount() {
     x.debug.log('main.componentDidMount - ' + this.state.pagingData);
-
   }
 
   render() {
@@ -26,14 +26,18 @@ class MainContainer extends React.Component {
         <div id="window-main-table" className="table">
           <div id="window-main-table-header" className="table-header x-freeze-height">
             <div id="toolbar" className="table-toolbar">
-              <button id="btnCreate" className="btn btn-default">新增</button>
+              {
+                this.state.buttons.map(function (node) {
+                  return <button key={node.name} id={node.name} className="btn btn-default">{node.label}</button>;
+                })
+              }
             </div>
             <span>{this.state.name}</span>
           </div>
           {
             (() => {
               if (this.state.tree) {
-                console.log(this.state.tree);
+                // console.log(this.state.tree);
                 return (
                   <div id="window-main-table-body" className="table-body">
                     <table className="table table-nopadding">

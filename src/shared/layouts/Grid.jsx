@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Grid extends React.Component {
   constructor(props) {
@@ -37,29 +38,34 @@ class Grid extends React.Component {
             </thead>
           </table>
         </div>
+        <ReactCSSTransitionGroup
+          transitionName="example"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
+          <div className="table-freeze-body">
 
-        <div className="table-freeze-body">
-          <table className="table table-striped">
-            <colgroup>
-              {
-                this.state.columns.map(function (node) {
-                  var widthValue = {};
+            <table className="table table-striped">
+              <colgroup>
+                {
+                  this.state.columns.map(function (node) {
+                    var widthValue = {};
 
-                  if (node.width) {
-                    widthValue = { width: node.width };
-                  }
+                    if (node.width) {
+                      widthValue = { width: node.width };
+                    }
 
-                  return (<col key={node.name} style={widthValue} />);
-                })
-              }
-            </colgroup>
-            <tbody>
-              {
-                this.state.data.map(this.createBody.bind(this))
-              }
-            </tbody>
-          </table>
-        </div>
+                    return (<col key={node.name} style={widthValue} />);
+                  })
+                }
+              </colgroup>
+              <tbody>
+                {
+                  this.state.data.map(this.createBody.bind(this))
+                }
+              </tbody>
+            </table>
+          </div>
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
@@ -87,7 +93,7 @@ class Grid extends React.Component {
                 return (<td key={key} > { column.render(node) } </td>)
               }
               else {
-                return (<td key={key} style={{wordWrap:"break-word",wordBreak:"break-all"}} > { node[column.field]} </td>)
+                return (<td key={key} style={{ wordWrap: "break-word", wordBreak: "break-all" }} > { node[column.field]} </td>)
               }
             }
           })
