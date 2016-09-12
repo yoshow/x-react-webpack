@@ -3,9 +3,6 @@ import ReactDOM from 'react-dom';
 
 import Mask from '../../shared/layouts/Mask';
 
-import AccountForm from './AccountForm';
-import AccountList from './AccountList';
-
 class AccountComponent extends React.Component
 {
   componentDidMount()
@@ -55,6 +52,83 @@ class AccountComponent extends React.Component
     );
 
     this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, obj, this.div);
+  }
+}
+
+class AccountList extends React.Component {
+  /**
+   * 构造函数
+   */
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [
+        { "name": "名称" },
+        { "name": "状态", "width": "60px" },
+        { "name": "操作", "width": "60px" },
+        { "name": "编辑", "width": "30px", icon: "fa fa-edit" },
+        { "name": "复制", "width": "30px", icon: "fa fa-copy" },
+        { "name": "删除", "width": "30px", icon: "fa fa-trash" }
+      ],
+      data: []
+    };
+  }
+
+  /**
+   * 组件加载完事件  
+   */
+  componentDidMount() {
+    $.get(this.props.source, function (result) {
+      console.log(result);
+      this.setState({ data: result.data });
+      this.refs.grid.setState({ data: result.data });
+    }.bind(this));
+  }
+
+  /**
+   * 组件渲染事件  
+   */
+  render() {
+    return (
+      <div id="window-main-table-container">
+        <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
+        {
+          this.state.data.map(function (item) {
+            // console.log(item);
+            return <div key={item.name}>{item.name}</div>
+          })
+        }
+      </div>
+    );
+  }
+}
+
+var styleBorder = { border: '1px solid #ff0' };
+
+class AccountForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { name: this.props.name };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+
+  render() {
+    return (
+      <div style={styleBorder}>
+        name: {this.state.name}
+        <form className="AccountForm">
+          <input type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange.bind(this) } />
+          <input type="text" placeholder="Say something..." />
+          <input type="submit" value="Post" />
+          <button id="" >确定</button>
+        </form>
+      </div>
+    );
+  }
+
+  handleChange(event) {
+    this.setState({ name: event.target.value });
   }
 }
 
