@@ -123,19 +123,21 @@ class ComputerList extends React.Component {
   }
 
   renderModel(props) {
-    if (this.container == null) {
-      this.container = document.createElement('div');
-
-      document.body.appendChild(this.container);
+    if (this.mountPoint == null) {
+      this.mountPoint = document.createElement('div');
+      document.body.appendChild(this.mountPoint);
     }
 
-    var obj = (
-      <Mask name="abc" >
-        <ComputerForm props={props} />
+    ReactDOM.unstable_renderSubtreeIntoContainer(this, (
+      <Mask>
+        <ComputerForm props={props} callback={ this.removeMountPoint.bind(this) } />
       </Mask>
-    );
+    ), this.mountPoint);
+  }
 
-    this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, obj, this.container);
+  removeMountPoint() {
+    document.body.removeChild(this.mountPoint);
+    this.mountPoint = null;
   }
 }
 
@@ -150,16 +152,33 @@ class ComputerForm extends React.Component {
     return (
       <div>
         name: {this.state.name}
-        名称 <input id="name" type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange.bind(this) } />
+        <table>
+          <tbody>
+            <tr>
+              <td>名称</td>
+              <td><input id="name" type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange.bind(this) } /></td>
+            </tr>
+            <tr>
+              <td>名称</td>
+              <td><input id="name" type="text" placeholder="Your name" value={this.state.name} onChange={this.handleChange.bind(this) } /></td>
+            </tr>
+          </tbody>
+        </table>
+
         IP <input id="ip" type="text" placeholder="Say something..." />
         <input type="submit" value="Post" />
-        <button id="" >确定</button>
+        <button id="" onClick={this.handleClick.bind(this) }>确定</button>
       </div>
     );
   }
 
   handleChange(event) {
     this.setState({ name: event.target.value });
+  }
+
+  handleClick(event) {
+    x.debug.log('form.click');
+    this.props.callback();
   }
 }
 

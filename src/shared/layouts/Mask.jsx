@@ -25,9 +25,10 @@ var styleMaskPopupWindow = {
 class Mask extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { name: props.name };
 
-    this.name = props.name;
+    this.name = props.name ? props.name : ('x-ui-mask-' + x.nonce());
+
+    this.state = { name: props.name };
     // 封装器
     this.wrapperName = props.name + '-wrapper';
     this.popupWindowName = props.name + '-popupWindow';
@@ -101,9 +102,9 @@ class Mask extends React.Component {
   * @memberof x.ui.mask.newMaskWrapper#
   */
   hide() {
-    console.log('mask hide');
+    console.log(this.name + 'mask hide');
     if (x.dom.query(this.popupWindowName).css('display') !== 'none') {
-      
+
       var that = this;
 
       x.dom.query(this.popupWindowName).fadeOut('normal', function () {
