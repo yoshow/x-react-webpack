@@ -112,6 +112,7 @@ render((
           <IndexRoute component={AccountList} />
           <Route path=":id" component={AccountDetail} />
         </Route>
+        <Route path="organization/list" component={Membership.OrganizationUnitList} />
         <Route path="computer/list" component={Membership.ComputerList} />
         <Route path="computer/form/:id" component={Membership.ComputerForm} />
       </Route>

@@ -47,12 +47,14 @@
     "express": "~4.5.0",
     "json-loader": "~0.5.1",
     "jsx-loader": "~0.10.2",
-    "lodash": "~3.10.1",
+    "lodash": "^3.10.1",
+    "lodash.assign": "^4.2.0",
     "react": "^15.3.1",
     "react-addons-css-transition-group": "^15.3.1",
     "react-css-modules": "^3.7.10",
     "react-dom": "^15.3.1",
     "react-kendo": "~0.13.11",
+    "react-prefixr": "^0.1.0",
     "react-router-transitions": "^2.1.0",
     "webpack": "^1.13.2"
   }
