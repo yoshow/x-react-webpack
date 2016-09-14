@@ -17,6 +17,7 @@
   ],
   "author": "ruanyu@live.com",
   "license": "Apache-2.0",
+  "dependencies": {},
   "devDependencies": {
     "autoprefixer-core": "^6.0.1",
     "babel": "^6.5.2",
@@ -51,6 +52,5 @@
     "jsx-loader": "~0.10.2",
     "style-loader": "^0.13.1",
     "css-loader": "^0.12.1"
-  },
-  "dependencies": {}
+  }
 }
