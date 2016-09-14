@@ -1,4 +1,6 @@
 
+import stylesheet from './main.less';
+
 import settings from './settings'
 
 import React from 'react';
@@ -108,13 +110,11 @@ render((
         </Route>
       </Route>
       <Route path="membership" component={Membership.ApplicationComponent} >
-        <Route path="accounts" component={Account} >
-          <IndexRoute component={AccountList} />
-          <Route path=":id" component={AccountDetail} />
-        </Route>
+        <Route path="account/list" component={Membership.AccountList} />
+        <Route path="group/list" component={Membership.GroupList} />
         <Route path="organization/list" component={Membership.OrganizationUnitList} />
+        <Route path="role/list" component={Membership.RoleList} />
         <Route path="computer/list" component={Membership.ComputerList} />
-        <Route path="computer/form/:id" component={Membership.ComputerForm} />
       </Route>
       {/**<Route path="bigdb" component={BigDb.ApplicationComponent} >
         <IndexRoute component={BigDb.TerminalComponent} />
@@ -123,8 +123,8 @@ render((
           <Route path="list" component={BigDb.BankList} />
         </Route>
       </Route>*/}
-      <Route path="*" component={NoMatch}/>
     </Route>
+    <Route path="*" component={NoMatch}/>
   </Router>),
   document.getElementById('container')
 );

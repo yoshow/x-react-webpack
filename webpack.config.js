@@ -37,15 +37,15 @@ module.exports = [{
           ]
         }
       },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') },
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader') },
+      { test: /\.less$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader') }
     ]
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
   plugins: [
-    new ExtractTextPlugin('style.css', { allChunks: true }),
-
+    new ExtractTextPlugin('[name]-bundle.css'),
     // 默认页面
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -55,21 +55,21 @@ module.exports = [{
     }),
     // 登陆页面
     new HtmlWebpackPlugin({
-      filename: 'account/sign-in.html',    
+      filename: 'account/sign-in.html',
       template: './src/html/account/sign-in.html',
       inject: true,
       chunks: ['login']
     }),
     // 应用管理页面
     new HtmlWebpackPlugin({
-      filename: 'applications/index.html',    
+      filename: 'applications/index.html',
       template: './src/html/applications/index.html',
       inject: true,
       chunks: ['login']
     }),
     // 人员及权限管理页面
     new HtmlWebpackPlugin({
-      filename: 'membership/index.html',    
+      filename: 'membership/index.html',
       template: './src/html/membership/index.html',
       inject: true,
       chunks: ['login']

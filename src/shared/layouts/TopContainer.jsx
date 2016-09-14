@@ -29,7 +29,7 @@ class TopContainer extends React.Component {
               </li>
               <li>
                 <p className="navbar-text">
-                  <i className="fa fa-sign-out"></i> <a href="javascript:void(0);" onClick={this.handleLogout}>退出</a>
+                  <i className="fa fa-sign-out"></i> <a href="javascript:void(0);" onClick={this.logout}>退出</a>
                 </p>
               </li>
             </ul>
@@ -40,8 +40,40 @@ class TopContainer extends React.Component {
     );
   }
 
-  handleLogout() {
-    // masterpage.logout();
+  logout() {
+    x.debug.log('topContainer.handleLogout')
+
+    x.net.xhr('/api/membership.member.quit.aspx?random=' + x.randomText.create(8), {
+      callback: function (response) {
+        try {
+          // document.execCommand("ClearAuthenticationCache", "false");
+
+          localStorage.removeItem('session-access-token');
+
+          var sessionIdentityName = $('#session-identity-name').val();
+          x.cookies.remove(sessionIdentityName);
+
+          x.page.close();
+        }
+        catch (ex) {
+          x.debug.log(ex);
+        }
+
+        try {
+          // 移除单点登录的Cookie信息
+          var domain = $('#session-domain').val();
+
+          var sessionIdentityName = $('#session-identity-name').val();
+
+          x.cookies.remove(sessionIdentityName, '/', domain);
+        }
+        catch (ex) {
+          x.debug.log(ex);
+        }
+
+        location.reload();
+      }
+    });
   }
 }
 

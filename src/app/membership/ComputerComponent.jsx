@@ -122,7 +122,7 @@ class ComputerList extends React.Component {
 
         // 设置 reactKey 
         result.data.forEach(function (node) {
-          node.reactKey = node.name;
+          node.reactKey = node.id;
         });
 
         this.paging.load(result.paging);

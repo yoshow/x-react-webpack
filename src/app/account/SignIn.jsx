@@ -1,16 +1,9 @@
-import settings from '../settings'
+import stylesheet from './SignIn.css';
 
-import styles from './style.css';
+import settings from '../settings'
 
 import React from 'react';
 import { render } from 'react-dom';
-
-// https://github.com/css-modules/webpack-demo
-// https://github.com/gajus/react-css-modules
-
-import CSSModules from 'react-css-modules';
-
-var styleDisplayNone = { display: "none" }
 
 class SignIn extends React.Component {
   /**
@@ -22,8 +15,6 @@ class SignIn extends React.Component {
       loginName: this.props.loginName,
       password: this.props.password
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -34,11 +25,11 @@ class SignIn extends React.Component {
       <div className="window-sign-in-form-wrapper">
         <div className="window-sign-in-form-container">
           <div className="window-sign-in-form-input input-group" >
-            <input id="loginName" maxLength="50" name="loginName" type="text" autoComplete="off" className="form-control" value={this.state.loginName} />
+            <input id="loginName" maxLength="50" name="loginName" type="text" autoComplete="off" className="form-control" />
             <div className="input-group-addon"><i className="glyphicon glyphicon-user"></i></div>
           </div>
           <div className="window-sign-in-form-input input-group" >
-            <input id="password" maxLength="50" name="password" type="password" className="form-control" value={this.state.password} onChange={this.handleChange} />
+            <input id="password" maxLength="50" name="password" type="password" className="form-control" onKeyUp={this.handleKeyUp.bind(this)} />
             <div className="input-group-addon"><i className="glyphicon glyphicon-lock"></i></div>
           </div>
           <div className="window-sign-in-form-remember-me">
@@ -46,8 +37,8 @@ class SignIn extends React.Component {
             <div className="pull-right" ><input id="remember" name="remember" type="checkbox" /> <span>忘记登录密码?</span></div>
           </div>
           <div className="window-sign-in-button-wrapper">
-            <div className="window-sign-in-button-submit"><button id="btnSubmit" className="btn btn-success" onClick={this.handleClick}>登陆</button></div>
-            <div className="window-sign-in-loading" style={styleDisplayNone}><img src="/resources/images/loading.gif" alt="登录中" /></div>
+            <div className="window-sign-in-button-submit"><button id="btnSubmit" className="btn btn-success" onClick={this.handleClick.bind(this)}>登陆</button></div>
+            <div className="window-sign-in-loading" style={{ display: "none" }}><img src="/resources/images/loading.gif" alt="登录中" /></div>
           </div>
           <div className="window-sign-in-form-bottom">
             <a href="account/sign-up.html">注册新帐号</a>
@@ -62,11 +53,18 @@ class SignIn extends React.Component {
     // this.setState({ name: event.target.value });
   }
 
+  handleKeyUp(event) {
+    if (event.keyCode == 13) {
+      // 登陆
+      this.login();
+    }
+  }
+
   handleClick(event) {
-    x.debug.log(this.state.loginName);
-    x.debug.log(this.state.password);
-    x.debug.log(event);
-    x.debug.log(event.target);
+    // x.debug.log(this.state.loginName);
+    // x.debug.log(this.state.password);
+    // x.debug.log(event);
+    // x.debug.log(event.target);
 
     // this.setState({ name: event.target.value });
 
@@ -131,6 +129,3 @@ class SignIn extends React.Component {
 render((<SignIn />),
   document.getElementById('container')
 );
-
-// export default SignIn;
-// export default CSSModules(SignIn, styles);

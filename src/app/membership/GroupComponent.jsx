@@ -10,7 +10,7 @@ import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } f
 import { Modal, ModalManager } from '../../shared/layouts/Modal';
 import * as Effect from '../../shared/layouts/Effect';
 
-class RoleList extends React.Component {
+class GroupList extends React.Component {
   /**
    * 构造函数
    */
@@ -176,7 +176,7 @@ class RoleList extends React.Component {
 
         ModalManager.open(
           <Modal style={{ content: { width: "402px", background: "transparent" } }} onRequestClose = {() => true} effect = { Effect.SlideFromBottom } >
-            <RoleForm name={"computer-" + result.data.id} data={result.data} refreshParent={ () => { this.getPaging(this.paging.currentPage); } } />
+            <GroupForm name={"computer-" + result.data.id} data={result.data} refreshParent={ () => { this.getPaging(this.paging.currentPage); } } />
           </Modal >
         );
       }.bind(this)
@@ -240,7 +240,7 @@ class RoleList extends React.Component {
   /*#endregion*/
 }
 
-class RoleForm extends React.Component {
+class GroupForm extends React.Component {
   constructor(props) {
     super(props);
     // 设置组建名称
@@ -387,4 +387,4 @@ class RoleForm extends React.Component {
   }
 }
 
-export { RoleList, RoleForm };
+export { GroupList, GroupForm };

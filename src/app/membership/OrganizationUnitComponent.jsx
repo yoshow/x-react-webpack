@@ -22,6 +22,13 @@ class OrganizationUnitList extends React.Component {
     // 分页对象
     this.paging = x.page.newPagingHelper(50);
 
+    // 设置 TreeView 信息
+    var treeViewRootTreeNodeId = '00000000-0000-0000-0000-000000000001';
+
+    this.getTreeView(treeViewRootTreeNodeId);
+
+    this.setTreeViewNode(treeViewRootTreeNodeId);
+
     // 设置 Button 信息
     this.buttons = [{
       name: 'btnCreate', label: '新增', icon: '', handle: function () {
@@ -41,8 +48,8 @@ class OrganizationUnitList extends React.Component {
           }.bind(this)
         },
         {
-          reactKey: 1, "name": "IP(MAC)", "field": "ip",
-          render: function (node) { return node.ip + '(' + node.mac + ')'; }
+          reactKey: 1, "name": "全局名称", "field": "globalName",
+          render: function (node) { return node.globalName ; }
         },
         {
           reactKey: 3, "name": "修改日期", "width": "100px", "field": "modifiedDate",
@@ -82,7 +89,7 @@ class OrganizationUnitList extends React.Component {
   render() {
     x.debug.log('membership.organization.list.render');
     return (
-      <MainContainer name="计算机管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="组织管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );
@@ -176,6 +183,62 @@ class OrganizationUnitList extends React.Component {
       }.bind(this)
     });
   }
+  
+  /*#region 函数:getTreeView(value)*/
+  /*
+  * 获取树形菜单
+  */
+  getTreeView(value) {
+
+    var treeViewId = '00000000-0000-0000-0000-000000000001';
+    var treeViewName = '组织结构';
+    var treeViewRootTreeNodeId = value; // 默认值:'00000000-0000-0000-0000-000000000001'
+    var treeViewUrl = 'javascript:main.membership.organizationUnit.list.setTreeViewNode(\'{treeNodeId}\')';
+
+    var outString = '<?xml version="1.0" encoding="utf-8" ?>';
+
+    outString += '<request>';
+    outString += '<action><![CDATA[getDynamicTreeView]]></action>';
+    outString += '<treeViewId><![CDATA[' + treeViewId + ']]></treeViewId>';
+    outString += '<treeViewName><![CDATA[' + treeViewName + ']]></treeViewName>';
+    outString += '<treeViewRootTreeNodeId><![CDATA[' + treeViewRootTreeNodeId + ']]></treeViewRootTreeNodeId>';
+    outString += '<tree><![CDATA[{tree}]]></tree>';
+    outString += '<parentId><![CDATA[{parentId}]]></parentId>';
+    outString += '<url><![CDATA[' + treeViewUrl + ']]></url>';
+    outString += '</request>';
+
+    var tree = x.ui.pkg.tree.newTreeView({ name: 'main.membership.organizationUnit.list.tree ' });
+
+    tree.setAjaxMode(true);
+
+    tree.add({
+      id: "0",
+      parentId: "-1",
+      name: treeViewName,
+      url: treeViewUrl.replace('{treeNodeId}', treeViewRootTreeNodeId),
+      title: treeViewName,
+      target: '',
+      icon: '/resources/images/tree/tree_icon.gif'
+    });
+
+    tree.load('/api/membership.contacts.getDynamicTreeView.aspx', false, outString);
+
+    x.register('main.membership.organizationUnit.list');
+
+    window.main.membership.organizationUnit.list.tree = this.tree = tree;
+    window.main.membership.organizationUnit.list.setTreeViewNode = this.setTreeViewNode.bind(this);
+  }
+  /*#endregion*/
+
+  /*#region 函数:setTreeViewNode(value)*/
+  setTreeViewNode(value) {
+    // this.paging.query.scence = 'QueryByOrganizationUnitId';
+    this.paging.query.where.ParentId = value;
+    this.paging.query.orders = ' OrderId ';
+
+    this.getPaging(1);
+  }
+  /*#endregion*/
 }
 
 class OrganizationUnitForm extends React.Component {

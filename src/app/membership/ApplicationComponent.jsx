@@ -11,27 +11,34 @@ import ApplicationMenu from '../../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../../shared/layouts/ApplicationMenuHandleBar';
 
 import { OrganizationUnitList } from './OrganizationUnitComponent';
+import { RoleList } from './RoleComponent';
 import { AccountList } from './AccountComponent';
 import { ComputerList, ComputerForm } from './ComputerComponent';
 
-class ApplicationComponent extends React.Component
-{
-  componentDidMount()
-  {
+class ApplicationComponent extends React.Component {
+  componentDidMount() {
     this.div = document.createElement('div');
     document.body.appendChild(this.div);
     // this.renderModel(this.props);
   }
 
-  render()
-  {
+  render() {
     x.debug.log('application.render');
     x.debug.log(this.props.children);
     return (
       <div className="web-container" >
         <ApplicationMenu applicationId={settings.applications["Membership"]} />
         <ApplicationMenuHandleBar />
-        {this.props.children}
+        {
+          (() => {
+            if (this.props.children == null) {
+              return <div></div>
+            }
+            else {
+              return this.props.children
+            }
+          })()
+        }
       </div>
     );
   }
@@ -40,6 +47,7 @@ class ApplicationComponent extends React.Component
 export default {
   ApplicationComponent,
   OrganizationUnitList,
+  RoleList,
   ComputerList,
   ComputerForm
 };

@@ -4,6 +4,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 class Grid extends React.Component {
   constructor(props) {
     super(props);
+    this.minRowNumber = props.minRowNumber || 50;
 
     this.state = { columns: props.columns, data: props.data };
 
@@ -58,11 +59,7 @@ class Grid extends React.Component {
                   })
                 }
               </colgroup>
-              <tbody>
-                {
-                  this.state.data.map(this.createBody.bind(this))
-                }
-              </tbody>
+              { this.createBody() }
             </table>
           </div>
         </ReactCSSTransitionGroup>
@@ -71,6 +68,37 @@ class Grid extends React.Component {
   }
 
   createBody(node) {
+    this.rowIndex = 0;
+    x.debug.log(this.rowIndex);
+
+    // 构建空行信息
+    var emptyRowCount = (this.minRowNumber - this.state.data.length);
+    var emptyRows = [];
+    if (emptyRowCount > 0) {
+      var emptyRowIndex = 0;
+      var emptyRows = new Array(emptyRowCount);
+      while (emptyRowIndex < emptyRowCount) {
+        emptyRows[emptyRowIndex] = emptyRowIndex;
+        emptyRowIndex++;
+      }
+    }
+
+    return (
+      <tbody>
+        {
+          this.state.data.map(this.createRow.bind(this))
+        }
+        {
+          // 设置空行信息
+          emptyRows.map(this.createEmptyRow.bind(this))
+        }
+      </tbody>
+    );
+  }
+
+  createRow(node) {
+    this.rowIndex++;
+    // x.debug.log(this.rowIndex);
     return (
       <tr key={"r-" + node.reactKey} >
         {
@@ -100,6 +128,19 @@ class Grid extends React.Component {
         }
       </tr>
     )
+  }
+
+  /** 
+   * 创建空行信息
+   */
+  createEmptyRow(node) {
+    this.rowIndex++;
+    // x.debug.log(this.rowIndex);
+    return (
+      <tr key={"r-" + this.rowIndex + '-empty-' + node } >
+        <td colSpan={ this.state.columns.length}>&nbsp; </td>
+      </tr>
+    );
   }
 }
 
