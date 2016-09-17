@@ -1,4 +1,4 @@
-
+import i18n from '../i18n'
 import settings from '../settings'
 
 import React from 'react';
@@ -129,10 +129,22 @@ class ApplicationMenuList extends React.Component {
   render() {
     x.debug.log('application.menu.list.render');
     return (
-      <MainContainer name="应用菜单管理" tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="应用菜单管理" buttons={ this.buttons } renderFilters={this.renderFilters} tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );
+  }
+
+  /**
+   * 生成过滤条件界面    
+   */
+  renderFilters() {
+    x.debug.log(this.name + '.renderFilters');
+    return (
+      <div className="table-row-filter form-inline text-right x-freeze-height">
+        <input id="searchText" type="text" defaultValue="" className="form-control input-sm" style={{ marginRight: "4px" }}/>
+        <button id="btnFilter" className="btn btn-default btn-sm" title={i18n.strings.btn_query}><i className="glyphicon glyphicon-search"></i></button>
+      </div>);
   }
 
   /*#region 函数:confirmDelete(id)*/

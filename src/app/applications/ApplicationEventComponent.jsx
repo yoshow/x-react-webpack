@@ -1,4 +1,4 @@
-
+import i18n from '../i18n'
 import settings from '../settings'
 
 import React from 'react';
@@ -26,7 +26,7 @@ class ApplicationEventList extends React.Component {
         {
           reactKey: 1, "name": "时间", "width": "160px", "field": "date",
           render: function (node) {
-            return  x.date.newTime(node.date).toString('yyyy-MM-dd HH:mm:ss');;
+            return x.date.newTime(node.date).toString('yyyy-MM-dd HH:mm:ss');;
           }
         }
       ],
@@ -45,15 +45,27 @@ class ApplicationEventList extends React.Component {
   }
 
   /**
-   * 组件渲染事件    
+   * 生成主体界面    
    */
   render() {
-    x.debug.log('application.event.list.render');
+    x.debug.log(this.name + '.render');
     return (
-      <MainContainer name="应用事件管理" pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="应用事件管理" renderFilters={this.renderFilters} pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );
+  }
+
+  /**
+   * 生成过滤条件界面    
+   */
+  renderFilters() {
+    x.debug.log(this.name + '.renderFilters');
+    return (
+      <div className="table-row-filter form-inline text-right x-freeze-height">
+        <input id="searchText" type="text" defaultValue="" className="form-control input-sm" style={{ marginRight: "4px" }}/>
+        <button id="btnFilter" className="btn btn-default btn-sm" title="查询" ><i className="glyphicon glyphicon-search"></i></button>
+      </div>);
   }
 
   /*#region 函数:getPaging(currentPage)*/

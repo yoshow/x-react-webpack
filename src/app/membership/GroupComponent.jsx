@@ -88,7 +88,7 @@ class GroupList extends React.Component {
   render() {
     x.debug.log('membership.role.list.render');
     return (
-      <MainContainer name="角色管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="群组管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );

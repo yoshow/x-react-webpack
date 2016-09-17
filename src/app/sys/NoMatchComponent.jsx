@@ -1,18 +1,11 @@
 import React from 'react';
 
-import CommentForm from './CommentForm';
-import CommentList from './CommentList';
-
-class CommentBox extends React.Component {
+class NoMatchCompoent extends React.Component {
   render() {
     return (
-      <div className="commentBox">
-        <h1>Comments</h1>
-        <CommentForm />
-        <CommentList />
-      </div>
+      <div>未找到匹配数据路由信息</div>
     );
   }
 }
 
-export default CommentBox;
+export default NoMatchCompoent;

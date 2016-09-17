@@ -10,29 +10,24 @@ import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } f
 import { Modal, ModalManager } from '../../shared/layouts/Modal';
 import * as Effect from '../../shared/layouts/Effect';
 
-class AccountList extends React.Component {
+class CatalogList extends React.Component {
   /**
    * 构造函数
    */
   constructor(props) {
     super(props);
 
-    x.debug.log('membership.account.list.constructor');
+    this.name = 'membership.catalog.list';
+
+    x.debug.log(this.name + '.constructor');
 
     // 分页对象
     this.paging = x.page.newPagingHelper(50);
 
-    // 设置 TreeView 信息
-    var treeViewRootTreeNodeId = '00000000-0000-0000-0000-000000000001';
-
-    this.getTreeView(treeViewRootTreeNodeId);
-
-    this.setTreeViewNode(treeViewRootTreeNodeId);
-
     // 设置 Button 信息
     this.buttons = [{
       name: 'btnCreate', label: '新增', icon: '', handle: function () {
-        x.debug.log('button create');
+        x.debug.log(this.name + '.create');
         this.openDialog();
       }.bind(this)
     }];
@@ -41,30 +36,48 @@ class AccountList extends React.Component {
     this.state = {
       columns: [
         {
-          reactKey: 0, "name": "名称", "width": "160px", "field": "name",
+          reactKey: 0, "name": "名称", "field": "name",
           render: function (node) {
-            // return <Link to={'/membership/computer/form/' + node.id}>{node.name}</Link>;
-            return <a href="javascript:void(0)" onClick={() => { this.openDialog(node.id) } }>{node.name}</a>;
+            if (node.displayType == 'Internal') {
+              return <span>{node.name}</span>;
+            }
+            else {
+              return <a href="javascript:void(0)" onClick={() => { this.openDialog(node.id) } }>{node.name}</a>;
+            }
           }.bind(this)
         },
         {
-          reactKey: 1, "name": "全局名称", "field": "globalName"
+          reactKey: 1, "name": "状态", "width": "80px", "field": "status",
+          render: function (node) {
+            // console.log(node);
+
+            switch (node.status) {
+              case '-1':
+              case '草稿':
+                return <span key={node.name} style={{ color: "tomato" }} title="草稿" ><i className="fa fa-pencil-square"></i></span>;
+              case '0':
+              case '禁用':
+                return <span key={node.name} className="red-text" title="禁用" ><i className="fa fa-times-circle"></i></span>;
+              case '1':
+              case '启用':
+                return <span key={node.name} className="green-text" title="启用" ><i className="fa fa-check-circle"></i></span>;
+              case '2':
+              case '回收':
+                return <span key={node.name} className="gray-text" title="回收" ><i className="fa fa-recycle"></i></span>;
+              default:
+                return node.status;
+            }
+          }
         },
         {
           reactKey: 3, "name": "修改日期", "width": "100px", "field": "modifiedDate",
           render: function (node) { return x.date.newTime(node.modifiedDate).toString('yyyy-MM-dd'); }
         },
         {
-          reactKey: 4, "name": "删除", "width": "30px", icon: "fa fa-trash", action: true,
+          reactKey: 4, "name": "编辑", "width": "30px", icon: "fa fa-edit", action: true,
           handle: function (node) {
-            // 删除事件
-            if (confirm(i18n.strings.msg_are_you_sure_you_want_to_delete)) {
-              x.net.xhr('/api/membership.account.delete.aspx?id=' + node.id, {
-                callback: function (response) {
-                  this.getPaging(this.paging.currentPage);
-                }.bind(this)
-              });
-            }
+            // 编辑事件
+            this.openDialog(node.id);
           }.bind(this)
         }
       ],
@@ -86,9 +99,9 @@ class AccountList extends React.Component {
    * 组件渲染事件  
    */
   render() {
-    x.debug.log('membership.account.list.render');
+    x.debug.log('membership.catalog.list.render');
     return (
-      <MainContainer name="帐号管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="目录管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );
@@ -119,7 +132,7 @@ class AccountList extends React.Component {
     outString += this.paging.toXml();
     outString += '</request>';
 
-    x.net.xhr('/api/membership.account.query.aspx', outString, {
+    x.net.xhr('/api/membership.catalog.query.aspx', outString, {
       waitingType: 'mini',
       waitingMessage: i18n.strings.msg_net_waiting_query_tip_text,
       callback: function (response) {
@@ -144,6 +157,7 @@ class AccountList extends React.Component {
   openDialog(value) {
     var id = x.isUndefined(value, '');
 
+    x.debug.log(value);
     var url = '';
 
     x.debug.log('openDialog - ' + id);
@@ -155,12 +169,12 @@ class AccountList extends React.Component {
     var isNewObject = false;
 
     if (id === '') {
-      url = '/api/membership.account.create.aspx';
+      url = '/api/membership.catalog.create.aspx';
 
       isNewObject = true;
     }
     else {
-      url = '/api/membership.account.findOne.aspx';
+      url = '/api/membership.catalog.findOne.aspx';
 
       outString += '<id><![CDATA[' + id + ']]></id>';
     }
@@ -176,75 +190,19 @@ class AccountList extends React.Component {
 
         ModalManager.open(
           <Modal style={{ content: { width: "402px", background: "transparent" } }} onRequestClose = {() => true} effect = { Effect.SlideFromBottom } >
-            <AccountForm name={"computer-" + result.data.id} data={result.data} refreshParent={ () => { this.getPaging(this.paging.currentPage); } } />
+            <CatalogForm name={"computer-" + result.data.id} data={result.data} refreshParent={ () => { this.getPaging(this.paging.currentPage); } } />
           </Modal >
         );
       }.bind(this)
     });
   }
-
-  /*#region 函数:getTreeView(value)*/
-  /*
-  * 获取树形菜单
-  */
-  getTreeView(value) {
-
-    var treeViewId = '00000000-0000-0000-0000-000000000001';
-    var treeViewName = '组织结构';
-    var treeViewRootTreeNodeId = value; // 默认值:'00000000-0000-0000-0000-000000000001'
-    var treeViewUrl = 'javascript:main.membership.account.list.setTreeViewNode(\'{treeNodeId}\')';
-
-    var outString = '<?xml version="1.0" encoding="utf-8" ?>';
-
-    outString += '<request>';
-    outString += '<action><![CDATA[getDynamicTreeView]]></action>';
-    outString += '<treeViewId><![CDATA[' + treeViewId + ']]></treeViewId>';
-    outString += '<treeViewName><![CDATA[' + treeViewName + ']]></treeViewName>';
-    outString += '<treeViewRootTreeNodeId><![CDATA[' + treeViewRootTreeNodeId + ']]></treeViewRootTreeNodeId>';
-    outString += '<tree><![CDATA[{tree}]]></tree>';
-    outString += '<parentId><![CDATA[{parentId}]]></parentId>';
-    outString += '<url><![CDATA[' + treeViewUrl + ']]></url>';
-    outString += '</request>';
-
-    var tree = x.ui.pkg.tree.newTreeView({ name: 'main.membership.account.list.tree ' });
-
-    tree.setAjaxMode(true);
-
-    tree.add({
-      id: "0",
-      parentId: "-1",
-      name: treeViewName,
-      url: treeViewUrl.replace('{treeNodeId}', treeViewRootTreeNodeId),
-      title: treeViewName,
-      target: '',
-      icon: '/resources/images/tree/tree_icon.gif'
-    });
-
-    tree.load('/api/membership.contacts.getDynamicTreeView.aspx', false, outString);
-
-    x.register('main.membership.account.list');
-
-    window.main.membership.account.list.tree = this.tree = tree;
-    window.main.membership.account.list.setTreeViewNode = this.setTreeViewNode.bind(this);
-  }
-  /*#endregion*/
-
-  /*#region 函数:setTreeViewNode(value)*/
-  setTreeViewNode(value) {
-    this.paging.query.scence = 'QueryByOrganizationUnitId';
-    this.paging.query.where.OrganizationUnitId = value;
-    this.paging.query.orders = ' OrderId ';
-
-    this.getPaging(1);
-  }
-  /*#endregion*/
 }
 
-class AccountForm extends React.Component {
+class CatalogForm extends React.Component {
   constructor(props) {
     super(props);
     // 设置组建名称
-    this.name = 'membership.account.form';
+    this.name = 'membership.catalog.form';
     this.state = { data: this.props.data };
     // this.handleChange = this.handleChange.bind(this);
   }
@@ -279,7 +237,7 @@ class AccountForm extends React.Component {
             <a href="javascript:void(0);" onClick={ModalManager.close} className="button-text"><i className="fa fa-close"></i></a>
           </div>
           <div className="float-left">
-            <div className="winodw-wizard-toolbar-item" style={{ width: "200px" }}><span>计算机信息</span></div>
+            <div className="winodw-wizard-toolbar-item" style={{ width: "200px" }}><span>目录信息</span></div>
             <div className="clear"></div>
           </div>
           <div className="clear"></div>
@@ -304,27 +262,24 @@ class AccountForm extends React.Component {
                       </td>
                     </tr>
                     <tr className="table-row-normal-transparent">
-                      <td className="table-body-text">计算机类型</td>
+                      <td className="table-body-text">排序</td>
                       <td className="table-body-input">
-                        <input id="type" name="type" type="text" defaultValue={this.state.data.type} data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
+                        <input id="orderId" name="orderId" type="text" defaultValue={this.state.data.orderId}
+                          data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
                       </td>
                     </tr>
                     <tr className="table-row-normal-transparent">
-                      <td className="table-body-text">IP</td>
+                      <td className="table-body-text">启用</td>
                       <td className="table-body-input">
-                        <input id="ip" name="ip" type="text" defaultValue={this.state.data.ip} data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
-                      </td>
-                    </tr>
-                    <tr className="table-row-normal-transparent">
-                      <td className="table-body-text">MAC</td>
-                      <td className="table-body-input">
-                        <input id="mac" name="mac" type="text" defaultValue={this.state.data.mac} data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
+                        <input id="status" name="status" type="checkbox" defaultValue={this.state.data.status}
+                          data-x-dom-data-type="value" />
                       </td>
                     </tr>
                     <tr className="table-row-normal-transparent">
                       <td className="table-body-text">备注</td>
                       <td className="table-body-input">
-                        <textarea id="remark" name="remark" data-x-dom-data-type="value" className="form-control" style={{ width: "200px", height: "80px" }} >{this.state.data.remark}</textarea>
+                        <textarea id="remark" name="remark" defaultValue={this.state.data.remark}
+                          data-x-dom-data-type="value" className="form-control" style={{ width: "200px", height: "80px" }} ></textarea>
                       </td>
                     </tr>
                   </tbody>
@@ -359,19 +314,12 @@ class AccountForm extends React.Component {
       outString += x.dom.data.serialize({ storageType: 'xml', scope: '#' + this.props.name });
       outString += '</request>';
 
-      x.net.xhr('/api/membership.account.save.aspx', outString, {
+      x.net.xhr('/api/membership.catalog.save.aspx', outString, {
         waitingMessage: i18n.strings.msg_net_waiting_save_tip_text,
         callback: function (response) {
-          // var result = x.toJSON(response).message;
 
-          // 如果有父级窗口，则调用父级窗口默认刷新函数。
           this.props.refreshParent();
-          // main.getPaging(main.paging.currentPage);
 
-          // x.msg(result.value);
-
-          // main.mask.close();
-          // x.page.close();
           ModalManager.close()
 
         }.bind(this)
@@ -387,4 +335,4 @@ class AccountForm extends React.Component {
   }
 }
 
-export { AccountList, AccountForm };
+export { CatalogList, CatalogForm };

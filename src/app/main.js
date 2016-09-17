@@ -14,56 +14,11 @@ import TopContainer from '../shared/layouts/TopContainer';
 import ApplicationMenu from '../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar';
 
+import NoMatch from './sys/NoMatchComponent';
 import Applications from './applications/ApplicationComponent';
 // import BigDb from './bigdb/ApplicationComponent';
 
 import Membership from './membership/ApplicationComponent';
-
-class Home extends React.Component {
-  render() {
-    console.log('Home');
-    return (
-      <div className="web-container" >
-        <ApplicationMenu applicationId="b69db4ff-9ae4-4269-9260-05e28ea923b5" />
-        <ApplicationMenuHandleBar />
-        <button>按钮 - A</button>
-        <button>按钮 - B</button>
-        <BigDb.TerminalComponent />
-      </div>
-    );
-  }
-}
-
-const ApplicationsView = ({ children }) => (
-  <div>
-    <h2>Membership</h2>
-    {children}
-  </div>
-)
-
-const Account = ({ children }) => (
-  <div>
-    <h2>Account</h2>
-  </div>
-)
-
-const AccountList = ({ children }) => (
-  <div>
-    <h2>AccountList</h2>
-  </div>
-)
-
-const AccountDetail = ({ children }) => (
-  <div>
-    <h2>AccountDetail</h2>
-  </div>
-)
-
-const NoMatch = () => (
-  <div>
-    <h2>No Match</h2>
-  </div>
-)
 
 render((
   <Router history={hashHistory}
@@ -92,15 +47,11 @@ render((
     <Route path="/" component={App.AppView}>
       <Route path="applications" component={Applications.ApplicationComponent} >
         <IndexRoute component={Applications.ApplicationList} />
-        <Route path="application-option" component={Applications.ApplicationOptionList} >
-          <Route path="list" component={Applications.ApplicationOptionList} />
-        </Route>
-        <Route path="application-setting" component={Applications.ApplicationSettingList} >
-          <Route path="list" component={Applications.ApplicationSettingList} />
-        </Route>
-        <Route path="application-menu" component={Applications.ApplicationMenuList} >
-          <Route path="list" component={Applications.ApplicationMenuList} />
-        </Route>
+        <Route path="application-option/list" component={Applications.ApplicationOptionList} />
+        <Route path="application-feature/list" component={Applications.ApplicationFeatureList} />
+        <Route path="application-setting-group/list" component={Applications.ApplicationSettingGroupList} />
+        <Route path="application-setting/list" component={Applications.ApplicationSettingList} />
+        <Route path="application-menu/list" component={Applications.ApplicationMenuList} />
         <Route path="application-menu/form/:id" component={Applications.ApplicationMenuForm} />
         <Route path="application-method" component={Applications.ApplicationMethodList} >
           <Route path="list" component={Applications.ApplicationMethodList} />
@@ -110,11 +61,13 @@ render((
         </Route>
       </Route>
       <Route path="membership" component={Membership.ApplicationComponent} >
+        <IndexRoute component={Membership.AccountList} />
         <Route path="account/list" component={Membership.AccountList} />
         <Route path="group/list" component={Membership.GroupList} />
         <Route path="organization/list" component={Membership.OrganizationUnitList} />
         <Route path="role/list" component={Membership.RoleList} />
         <Route path="computer/list" component={Membership.ComputerList} />
+        <Route path="catalog/list" component={Membership.CatalogList} />
       </Route>
       {/**<Route path="bigdb" component={BigDb.ApplicationComponent} >
         <IndexRoute component={BigDb.TerminalComponent} />
