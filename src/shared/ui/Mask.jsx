@@ -132,7 +132,7 @@ export const MaskManager = {
     close(){
        onClose && onClose(() => {
          ReactDOM.unmountComponentAtNode(node);
-         renderMask();// render the other Masks which are waiting.
+         renderMask(); // render the other Masks which are waiting.
        });
     }
 }

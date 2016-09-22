@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import MainContainer from '../../shared/layouts/MainContainer';
-import Mask from '../../shared/layouts/Mask';
+import Mask from '../../shared/ui/Mask';
 
 import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } from 'react-router'
 
 import { Modal, ModalManager } from '../../shared/layouts/Modal';
-import * as Effect from '../../shared/layouts/Effect';
+import * as Effect from '../../shared/ui/Animations';
 
 class ApplicationWizard extends React.Component {
   /**

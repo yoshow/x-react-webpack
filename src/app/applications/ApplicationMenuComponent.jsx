@@ -6,8 +6,8 @@ import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } from 'react-router'
 
 import MainContainer from '../../shared/layouts/MainContainer';
-import Grid from '../../shared/layouts/Grid';
-import Mask from '../../shared/layouts/Mask';
+import Grid from '../../shared/ui/Grid';
+import Mask from '../../shared/ui/Mask';
 
 class ApplicationMenuList extends React.Component {
   /**

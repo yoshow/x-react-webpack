@@ -3,8 +3,8 @@ import settings from '../settings'
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Grid from '../../shared/layouts/Grid';
-import Mask from '../../shared/layouts/Mask';
+import Grid from '../../shared/ui/Grid';
+import Mask from '../../shared/ui/Mask';
 import MainContainer from '../../shared/layouts/MainContainer';
 
 import ApplicationMenu from '../../shared/layouts/ApplicationMenu';

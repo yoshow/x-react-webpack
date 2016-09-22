@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Paging from './Paging';
+import Paging from '../ui/Paging';
 
 class MainContainer extends React.Component {
   constructor(props) {
