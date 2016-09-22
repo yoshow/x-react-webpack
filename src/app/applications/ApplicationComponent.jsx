@@ -11,6 +11,8 @@ import ApplicationMenu from '../../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../../shared/layouts/ApplicationMenuHandleBar';
 
 import { ApplicationOptionList } from './ApplicationOptionComponent';
+import { ApplicationFeatureList } from './ApplicationFeatureComponent';
+import { ApplicationSettingGroupList } from './ApplicationSettingGroupComponent';
 import { ApplicationSettingList } from './ApplicationSettingComponent';
 import { ApplicationMenuList, ApplicationMenuForm } from './ApplicationMenuComponent';
 import { ApplicationMethodList } from './ApplicationMethodComponent';
@@ -25,7 +27,6 @@ class ApplicationComponent extends React.Component {
 
   render() {
     x.debug.log('application.render');
-    x.debug.log(this.props.children);
     return (
       <div className="web-container" >
         <ApplicationMenu applicationId={settings.applications["ApplicationManagement"]} />
@@ -249,6 +250,8 @@ export default {
   ApplicationComponent,
   ApplicationList,
   ApplicationOptionList,
+  ApplicationFeatureList,
+  ApplicationSettingGroupList,
   ApplicationSettingList,
   ApplicationMenuList, 
   ApplicationMenuForm,

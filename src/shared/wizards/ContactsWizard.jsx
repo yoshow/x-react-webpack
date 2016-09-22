@@ -10,24 +10,17 @@ import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } f
 import { Modal, ModalManager } from '../../shared/layouts/Modal';
 import * as Effect from '../../shared/layouts/Effect';
 
-class AccountList extends React.Component {
+class ComputerList extends React.Component {
   /**
    * 构造函数
    */
   constructor(props) {
     super(props);
 
-    x.debug.log('membership.account.list.constructor');
+    x.debug.log('membership.computer.list.constructor');
 
     // 分页对象
     this.paging = x.page.newPagingHelper(50);
-
-    // 设置 TreeView 信息
-    var treeViewRootTreeNodeId = '00000000-0000-0000-0000-000000000001';
-
-    this.getTreeView(treeViewRootTreeNodeId);
-
-    this.setTreeViewNode(treeViewRootTreeNodeId);
 
     // 设置 Button 信息
     this.buttons = [{
@@ -48,7 +41,8 @@ class AccountList extends React.Component {
           }.bind(this)
         },
         {
-          reactKey: 1, "name": "全局名称", "field": "globalName"
+          reactKey: 1, "name": "IP(MAC)", "field": "ip",
+          render: function (node) { return node.ip + '(' + node.mac + ')'; }
         },
         {
           reactKey: 3, "name": "修改日期", "width": "100px", "field": "modifiedDate",
@@ -59,7 +53,7 @@ class AccountList extends React.Component {
           handle: function (node) {
             // 删除事件
             if (confirm(i18n.strings.msg_are_you_sure_you_want_to_delete)) {
-              x.net.xhr('/api/membership.account.delete.aspx?id=' + node.id, {
+              x.net.xhr('/api/membership.computer.delete.aspx?id=' + node.id, {
                 callback: function (response) {
                   this.getPaging(this.paging.currentPage);
                 }.bind(this)
@@ -86,9 +80,9 @@ class AccountList extends React.Component {
    * 组件渲染事件  
    */
   render() {
-    x.debug.log('membership.account.list.render');
+    x.debug.log('membership.computer.list.render');
     return (
-      <MainContainer name="帐号管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="计算机管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );
@@ -119,7 +113,7 @@ class AccountList extends React.Component {
     outString += this.paging.toXml();
     outString += '</request>';
 
-    x.net.xhr('/api/membership.account.query.aspx', outString, {
+    x.net.xhr('/api/membership.computer.query.aspx', outString, {
       waitingType: 'mini',
       waitingMessage: i18n.strings.msg_net_waiting_query_tip_text,
       callback: function (response) {
@@ -128,7 +122,7 @@ class AccountList extends React.Component {
 
         // 设置 reactKey 
         result.data.forEach(function (node) {
-          node.reactKey = node.name;
+          node.reactKey = node.id;
         });
 
         this.paging.load(result.paging);
@@ -155,12 +149,12 @@ class AccountList extends React.Component {
     var isNewObject = false;
 
     if (id === '') {
-      url = '/api/membership.account.create.aspx';
+      url = '/api/membership.computer.create.aspx';
 
       isNewObject = true;
     }
     else {
-      url = '/api/membership.account.findOne.aspx';
+      url = '/api/membership.computer.findOne.aspx';
 
       outString += '<id><![CDATA[' + id + ']]></id>';
     }
@@ -176,75 +170,19 @@ class AccountList extends React.Component {
 
         ModalManager.open(
           <Modal style={{ content: { width: "402px", background: "transparent" } }} onRequestClose = {() => true} effect = { Effect.SlideFromBottom } >
-            <AccountForm name={"computer-" + result.data.id} data={result.data} refreshParent={ () => { this.getPaging(this.paging.currentPage); } } />
+            <ComputerForm name={"computer-" + result.data.id} data={result.data} refreshParent={ () => { this.getPaging(this.paging.currentPage); } } />
           </Modal >
         );
       }.bind(this)
     });
   }
-
-  /*#region 函数:getTreeView(value)*/
-  /*
-  * 获取树形菜单
-  */
-  getTreeView(value) {
-
-    var treeViewId = '00000000-0000-0000-0000-000000000001';
-    var treeViewName = '组织结构';
-    var treeViewRootTreeNodeId = value; // 默认值:'00000000-0000-0000-0000-000000000001'
-    var treeViewUrl = 'javascript:main.membership.account.list.setTreeViewNode(\'{treeNodeId}\')';
-
-    var outString = '<?xml version="1.0" encoding="utf-8" ?>';
-
-    outString += '<request>';
-    outString += '<action><![CDATA[getDynamicTreeView]]></action>';
-    outString += '<treeViewId><![CDATA[' + treeViewId + ']]></treeViewId>';
-    outString += '<treeViewName><![CDATA[' + treeViewName + ']]></treeViewName>';
-    outString += '<treeViewRootTreeNodeId><![CDATA[' + treeViewRootTreeNodeId + ']]></treeViewRootTreeNodeId>';
-    outString += '<tree><![CDATA[{tree}]]></tree>';
-    outString += '<parentId><![CDATA[{parentId}]]></parentId>';
-    outString += '<url><![CDATA[' + treeViewUrl + ']]></url>';
-    outString += '</request>';
-
-    var tree = x.ui.pkg.tree.newTreeView({ name: 'main.membership.account.list.tree ' });
-
-    tree.setAjaxMode(true);
-
-    tree.add({
-      id: "0",
-      parentId: "-1",
-      name: treeViewName,
-      url: treeViewUrl.replace('{treeNodeId}', treeViewRootTreeNodeId),
-      title: treeViewName,
-      target: '',
-      icon: '/resources/images/tree/tree_icon.gif'
-    });
-
-    tree.load('/api/membership.contacts.getDynamicTreeView.aspx', false, outString);
-
-    x.register('main.membership.account.list');
-
-    window.main.membership.account.list.tree = this.tree = tree;
-    window.main.membership.account.list.setTreeViewNode = this.setTreeViewNode.bind(this);
-  }
-  /*#endregion*/
-
-  /*#region 函数:setTreeViewNode(value)*/
-  setTreeViewNode(value) {
-    this.paging.query.scence = 'QueryByOrganizationUnitId';
-    this.paging.query.where.OrganizationUnitId = value;
-    this.paging.query.orders = ' OrderId ';
-
-    this.getPaging(1);
-  }
-  /*#endregion*/
 }
 
-class AccountForm extends React.Component {
+class ComputerForm extends React.Component {
   constructor(props) {
     super(props);
     // 设置组建名称
-    this.name = 'membership.account.form';
+    this.name = 'membership.computer.form';
     this.state = { data: this.props.data };
     // this.handleChange = this.handleChange.bind(this);
   }
@@ -359,7 +297,7 @@ class AccountForm extends React.Component {
       outString += x.dom.data.serialize({ storageType: 'xml', scope: '#' + this.props.name });
       outString += '</request>';
 
-      x.net.xhr('/api/membership.account.save.aspx', outString, {
+      x.net.xhr('/api/membership.computer.save.aspx', outString, {
         waitingMessage: i18n.strings.msg_net_waiting_save_tip_text,
         callback: function (response) {
           // var result = x.toJSON(response).message;
@@ -387,4 +325,4 @@ class AccountForm extends React.Component {
   }
 }
 
-export { AccountList, AccountForm };
+export { ComputerList, ComputerForm };

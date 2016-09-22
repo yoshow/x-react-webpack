@@ -22,7 +22,7 @@ const defaultStyles = {
     margin                  : '50px auto',
     // width                   : '60%',
     border                  : '1px solid rgba(0, 0, 0, .2)',
-    background              : '#fff',
+    background              : 'transparent',
     overflow                : 'auto',
     borderRadius            : '4px',
     outline                 : 'none',

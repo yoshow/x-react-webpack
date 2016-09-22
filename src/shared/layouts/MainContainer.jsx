@@ -9,12 +9,13 @@ class MainContainer extends React.Component {
     this.state = {
       name: props.name,
       buttons: props.buttons,
+      renderFilters: props.renderFilters,
       tree: props.tree,
       pagingData: props.pagingData,
       pagingHandle: props.pagingHandle
     };
 
-    console.log(this.state.buttons);
+    x.debug.log(this.state.buttons);
   }
   componentDidMount() {
     x.debug.log('main.componentDidMount - ' + this.state.pagingData);
@@ -30,7 +31,7 @@ class MainContainer extends React.Component {
                 (() => {
                   if (this.state.buttons) {
                     return this.state.buttons.map(function (node) {
-                      return <button key={node.name} id={node.name} onClick={node.handle.bind(this)} className="btn btn-default">{node.label}</button>;
+                      return <button key={node.name} id={node.name} onClick={node.handle.bind(this) } className="btn btn-default"><i className={node.icon} title={node.label}></i> {node.label}</button>;
                     });
                   }
                 })()
@@ -38,6 +39,20 @@ class MainContainer extends React.Component {
             </div>
             <span>{this.state.name}</span>
           </div>
+          {
+            (() => {
+              if (this.state.renderFilters) {
+                return this.state.renderFilters();
+              }
+              else {
+                // return (
+                // <div className="table-row-filter form-inline text-right x-freeze-height">
+                //  <input id="searchText" type="text" defaultValue="" className="form-control input-sm" style={{ marginRight: "4px" }}/>
+                //  <button id="btnFilter" className="btn btn-default btn-sm" title="查询"><i className="glyphicon glyphicon-search"></i></button>
+                // </div> );
+              }
+            })()
+          }
           {
             (() => {
               if (this.state.tree) {
@@ -50,10 +65,10 @@ class MainContainer extends React.Component {
                           <td className="table-sidebar">
                             <div id="window-main-table-sidebar">
                               <div className="table-sidebar-search form-inline">
-                                <input id="searchText" type="text" value="" className="table-sidebar-search-text form-control input-sm" style={{ marginRight: "4px" }} />
+                                <input id="searchText" type="text" defaultValue="" className="table-sidebar-search-text form-control input-sm" style={{ marginRight: "4px" }} />
                                 <button id="btnFilter" className="btn btn-default btn-sm" title="查询"><i className="glyphicon glyphicon-search"></i></button>
                               </div>
-                              <div id="treeViewContainer" className="table-sidebar-tree-view" dangerouslySetInnerHTML={this.createMarkup() }></div>
+                              <div id="treeViewContainer" className="table-sidebar-tree-view" dangerouslySetInnerHTML={ this.createMarkup() }></div>
                             </div>
                           </td>
                           <td>
@@ -69,10 +84,6 @@ class MainContainer extends React.Component {
               } else {
                 return (
                   <div id="window-main-table-body" className="table-body">
-                    <div className="table-row-filter form-inline text-right x-freeze-height">
-                      <input id="searchText" type="text" defaultValue="" className="form-control input-sm" style={{ marginRight: "4px" }}/>
-                      <button id="btnFilter" className="btn btn-default btn-sm" title="查询"><i className="glyphicon glyphicon-search"></i></button>
-                    </div>
                     <div id="window-main-table-container">
                       {this.props.children}
                     </div>
@@ -94,6 +105,7 @@ class MainContainer extends React.Component {
       </div>
     );
   }
+
   createMarkup() {
     return { __html: this.state.tree.toString() };
   };

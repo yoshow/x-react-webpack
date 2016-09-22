@@ -10,12 +10,10 @@ import MainContainer from '../../shared/layouts/MainContainer';
 import ApplicationMenu from '../../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../../shared/layouts/ApplicationMenuHandleBar';
 
-import { SettingList } from './SettingComponent';
-import { CatalogList, CatalogForm } from './CatalogComponent';
-import { AccountList, AccountForm } from './AccountComponent';
-import { GroupList, GroupForm } from './GroupComponent';
 import { OrganizationUnitList } from './OrganizationUnitComponent';
 import { RoleList } from './RoleComponent';
+import { AccountList } from './AccountComponent';
+import { GroupList } from './GroupComponent';
 import { ComputerList, ComputerForm } from './ComputerComponent';
 
 class ApplicationComponent extends React.Component {
@@ -49,8 +47,6 @@ class ApplicationComponent extends React.Component {
 
 export default {
   ApplicationComponent,
-  SettingList,
-  CatalogList,
   AccountList,
   GroupList,
   OrganizationUnitList,
