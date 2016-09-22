@@ -13,6 +13,7 @@ import ApplicationMenuHandleBar from '../../shared/layouts/ApplicationMenuHandle
 import { OrganizationUnitList } from './OrganizationUnitComponent';
 import { RoleList } from './RoleComponent';
 import { AccountList } from './AccountComponent';
+import { GroupList, GroupForm } from './GroupComponent';
 import { ComputerList, ComputerForm } from './ComputerComponent';
 
 class ApplicationComponent extends React.Component {
@@ -48,6 +49,8 @@ export default {
   ApplicationComponent,
   OrganizationUnitList,
   RoleList,
+  GroupList,
+  GroupForm,
   ComputerList,
   ComputerForm
 };

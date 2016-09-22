@@ -238,6 +238,7 @@ class ComputerForm extends React.Component {
                       <td className="table-body-text" style={{ width: "120px" }}>名称</td>
                       <td className="table-body-input">
                         <input id="id" name="id" type="hidden" value={this.state.data.id} data-x-dom-data-type="value" />
+                        <input id="distinguishedName" name="distinguishedName" type="hidden" value={this.state.data.distinguishedName} data-x-dom-data-type="value" />
                         <input id="name" name="name" type="text" defaultValue={this.state.data.name} data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
                       </td>
                     </tr>

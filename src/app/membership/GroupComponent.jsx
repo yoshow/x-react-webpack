@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import MainContainer from '../../shared/layouts/MainContainer';
 import Grid from '../../shared/layouts/Grid';
 import Mask from '../../shared/layouts/Mask';
+import Tabs from '../../shared/layouts/Tabs';
+
 
 import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } from 'react-router'
 
@@ -17,7 +19,7 @@ class GroupList extends React.Component {
   constructor(props) {
     super(props);
 
-    x.debug.log('membership.role.list.constructor');
+    x.debug.log('membership.group.list.constructor');
 
     // 分页对象
     this.paging = x.page.newPagingHelper(50);
@@ -59,7 +61,7 @@ class GroupList extends React.Component {
           handle: function (node) {
             // 删除事件
             if (confirm(i18n.strings.msg_are_you_sure_you_want_to_delete)) {
-              x.net.xhr('/api/membership.role.delete.aspx?id=' + node.id, {
+              x.net.xhr('/api/membership.group.delete.aspx?id=' + node.id, {
                 callback: function (response) {
                   this.getPaging(this.paging.currentPage);
                 }.bind(this)
@@ -86,9 +88,9 @@ class GroupList extends React.Component {
    * 组件渲染事件  
    */
   render() {
-    x.debug.log('membership.role.list.render');
+    x.debug.log('membership.group.list.render');
     return (
-      <MainContainer name="角色管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
+      <MainContainer name="群组管理" buttons={ this.buttons } tree={ this.tree } pagingData={this.paging} pagingHandle={(value) => { this.getPaging(value) } } ref="main" >
         <Grid key={this.state.data} columns={this.state.columns} data={this.state.data} ref="grid"></Grid>
       </MainContainer>
     );
@@ -119,7 +121,7 @@ class GroupList extends React.Component {
     outString += this.paging.toXml();
     outString += '</request>';
 
-    x.net.xhr('/api/membership.role.query.aspx', outString, {
+    x.net.xhr('/api/membership.group.query.aspx', outString, {
       waitingType: 'mini',
       waitingMessage: i18n.strings.msg_net_waiting_query_tip_text,
       callback: function (response) {
@@ -155,12 +157,12 @@ class GroupList extends React.Component {
     var isNewObject = false;
 
     if (id === '') {
-      url = '/api/membership.role.create.aspx';
+      url = '/api/membership.group.create.aspx';
 
       isNewObject = true;
     }
     else {
-      url = '/api/membership.role.findOne.aspx';
+      url = '/api/membership.group.findOne.aspx';
 
       outString += '<id><![CDATA[' + id + ']]></id>';
     }
@@ -175,7 +177,7 @@ class GroupList extends React.Component {
         var result = x.toJSON(response);
 
         ModalManager.open(
-          <Modal style={{ content: { width: "402px", background: "transparent" } }} onRequestClose = {() => true} effect = { Effect.SlideFromBottom } >
+          <Modal style={{ content: { width: "602px", background: "transparent" } }} onRequestClose = {() => true} effect = { Effect.SlideFromBottom } >
             <GroupForm name={"computer-" + result.data.id} data={result.data} refreshParent={ () => { this.getPaging(this.paging.currentPage); } } />
           </Modal >
         );
@@ -187,12 +189,12 @@ class GroupList extends React.Component {
   /*
   * 获取树形菜单
   */
-  getTreeView(value) {
+  getTreeView() {
 
-    var treeViewId = '00000000-0000-0000-0000-000000000001';
-    var treeViewName = '组织结构';
-    var treeViewRootTreeNodeId = value; // 默认值:'00000000-0000-0000-0000-000000000001'
-    var treeViewUrl = 'javascript:main.membership.role.list.setTreeViewNode(\'{treeNodeId}\')';
+    var treeViewId = '40000000-0000-0000-0000-000000000000';
+    var treeViewName = '群组类别';
+    var treeViewRootTreeNodeId = '40000000-0000-0000-0000-000000000000'; // 默认值:'00000000-0000-0000-0000-000000000001'
+    var treeViewUrl = 'javascript:main.membership.group.list.setTreeViewNode(\'{treeNodeId}\')';
 
     var outString = '<?xml version="1.0" encoding="utf-8" ?>';
 
@@ -206,7 +208,7 @@ class GroupList extends React.Component {
     outString += '<url><![CDATA[' + treeViewUrl + ']]></url>';
     outString += '</request>';
 
-    var tree = x.ui.pkg.tree.newTreeView({ name: 'main.membership.role.list.tree ' });
+    var tree = x.ui.pkg.tree.newTreeView({ name: 'main.membership.group.list.tree ' });
 
     tree.setAjaxMode(true);
 
@@ -220,19 +222,19 @@ class GroupList extends React.Component {
       icon: '/resources/images/tree/tree_icon.gif'
     });
 
-    tree.load('/api/membership.contacts.getDynamicTreeView.aspx', false, outString);
+    tree.load('/api/membership.catalog.getDynamicTreeView.aspx', false, outString);
 
-    x.register('main.membership.role.list');
+    x.register('main.membership.group.list');
 
-    window.main.membership.role.list.tree = this.tree = tree;
-    window.main.membership.role.list.setTreeViewNode = this.setTreeViewNode.bind(this);
+    window.main.membership.group.list.tree = this.tree = tree;
+    window.main.membership.group.list.setTreeViewNode = this.setTreeViewNode.bind(this);
   }
   /*#endregion*/
 
   /*#region 函数:setTreeViewNode(value)*/
   setTreeViewNode(value) {
-    this.paging.query.scence = 'QueryByOrganizationUnitId';
-    this.paging.query.where.OrganizationUnitId = value;
+    // this.paging.query.scence = 'QueryByOrganizationUnitId';
+    this.paging.query.where.CatalogItemId = value;
     this.paging.query.orders = ' OrderId ';
 
     this.getPaging(1);
@@ -244,7 +246,20 @@ class GroupForm extends React.Component {
   constructor(props) {
     super(props);
     // 设置组建名称
-    this.name = 'membership.role.form';
+    this.name = 'membership.group.form';
+
+    // 设置 Button 信息
+    this.buttons = [
+      {
+        name: 'btnClose', label: '关闭', className: 'btnClose', icon: '', handle: function () {
+          // x.debug.log('button create');
+          ModalManager.close()
+        }.bind(this)
+      },
+      {
+        name: 'btnSave', label: '保存', className: 'btnSave', icon: '', handle: this.handleClick.bind(this)
+      }];
+
     this.state = { data: this.props.data };
     // this.handleChange = this.handleChange.bind(this);
   }
@@ -273,66 +288,133 @@ class GroupForm extends React.Component {
 
   render() {
     return (
-      <div key={this.props.name} id={this.props.name} className="winodw-wizard-wrapper" style={{ width: "400px", height: "auto" }}>
+      <div key={this.props.name} id={this.props.name} className="winodw-wizard-wrapper" style={{ width: "600px", height: "auto" }}>
         <div className="winodw-wizard-toolbar">
           <div className="winodw-wizard-toolbar-close">
             <a href="javascript:void(0);" onClick={ModalManager.close} className="button-text"><i className="fa fa-close"></i></a>
           </div>
           <div className="float-left">
-            <div className="winodw-wizard-toolbar-item" style={{ width: "200px" }}><span>计算机信息</span></div>
+            <div className="winodw-wizard-toolbar-item" style={{ width: "200px" }}><span>群组信息</span></div>
             <div className="clear"></div>
           </div>
           <div className="clear"></div>
         </div>
+        <Tabs buttons={this.buttons}>
+          <div name="基本信息">
+            <table className="table">
+              <tbody>
+                <tr className="table-row-normal-transparent" >
+                  <td className="table-body-text" >编码</td>
+                  <td className="table-body-input" colSpan="3" >
+                    <input id="id" name="id" type="hidden" data-x-dom-data-type="value" defaultValue={this.state.data.id} />
+                    <input id="originalName" name="originalName" type="hidden" data-x-dom-data-type="value" defaultValue={this.state.data.name} />
+                    <input id="originalGlobalName" name="originalGlobalName" type="hidden" data-x-dom-data-type="value" defaultValue={this.state.data.globalName} />
+                    {
+                      (() => {
+                        if (typeof (this.state.data.code) === 'undefined' || this.state.data.code === '') {
+                          return (
+                            <div>
+                              <span className="gray-text">自动编号</span>
+                              <input id="code" name="code" type="hidden" data-data-data-x-dom-data-type="value" />
+                            </div>
+                          )
+                        }
+                        else {
+                          return <input id="code" name="code" type="text" data-data-x-dom-data-type="value" defaultValue={this.state.data.code} className="form-control" style={{ width: "120px;" }} />
+                        }
+                      })()
+                    }
+                  </td>
+                </tr>
 
-        <div className="x-ui-pkg-tabs-wrapper">
-          <div className="x-ui-pkg-tabs-toolbar">
-            <button id="btnClose" type="button" onClick={ ModalManager.close }  className="btnClose" title="关闭">关闭</button>
-            <button id="btnSave" type="button" onClick={ this.handleClick.bind(this) } className="btnSave" title="保存">保存</button>
-            <div className="clear"></div>
+                <tr className="table-row-normal-transparent">
+                  <td className="table-body-text" style={{ width: "120px" }} ><span className="required-text">名称</span></td>
+                  <td className="table-body-input" style={{ width: "160px" }} >
+                    <input id="name" name="name" type="text" data-x-dom-data-type="value" data-x-dom-data-required="1" data-x-dom-data-required-warning="【名称】必须填写。" defaultValue={ this.state.data.name} className="form-control" style={{ width: "120px" }} />
+                  </td>
+                  <td className="table-body-text" style={{ width: "120px" }} ><span className="required-text">所属类别</span></td>
+                  <td className="table-body-input" >
+                    <input id="catalogItemId" name="catalogItemId" type="hidden" data-x-dom-data-type="value" defaultValue={ this.state.data.catalogItemId } />
+                    <input id="catalogItemName" name="catalogItemName" type="text" data-x-dom-data-type="value" data-x-dom-data-required="1" data-x-dom-data-required-warning="【所属类别】必须填写。" defaultValue={this.state.data.catalogItemName} className="form-control" style={{ width: "120px" }} />
+                    <a href="javascript:x.ui.wizards.getGroupTreeWizardSingleton(\'catalogItemName\', \'catalogItemId\', \'40000000-0000-0000-0000-000000000000\', \'常用群组类别\');" >编辑</a>
+                  </td>
+                </tr>
+
+                <tr className="table-row-normal-transparent" >
+                  <td className="table-body-text" style={{ width: "120px" }} ><span className="required-text">全局名称</span></td>
+                  <td className="table-body-input" style={{ width: "160px" }} >
+                    <input id="globalName" name="globalName" type="text" data-x-dom-data-type="value" data-x-dom-data-required="1" data-x-dom-data-required-warning="【全局名称】必须填写。" defaultValue={this.state.data.globalName} className="form-control" style={{ width: "120px" }} />
+                  </td>
+                  <td className="table-body-text" style={{ width: "120px" }} >拼音</td>
+                  <td className="table-body-input">
+                    <input id="pinyin" name="pinyin" type="text" data-x-dom-data-type="value" defaultValue={this.state.data.pinyin} className="form-control" style={{ width: "120px" }} />
+                  </td>
+                </tr>
+
+                <tr className="table-row-normal-transparent">
+                  <td className="table-body-text" style={{ width: "120px" }} >排序</td>
+                  <td className="table-body-input" >
+                    <input id="orderId" name="orderId" type="text" data-x-dom-data-type="value" defaultValue={this.state.data.orderId} className="form-control x-ajax-checkbox" style={{ width: "120px" }} />
+                  </td>
+                  <td className="table-body-text" style={{ width: "120px" }} >启用企业邮箱</td>
+                  <td className="table-body-input" >
+                    <input id="enableExchangeEmail" name="enableExchangeEmail" type="checkbox" data-x-dom-data-type="value" data-x-dom-feature="checkbox" defaultValue={this.state.data.enableExchangeEmail} />
+                  </td>
+                </tr>
+
+                <tr className="table-row-normal-transparent">
+                  <td className="table-body-text" >启用</td>
+                  <td className="table-body-input" >
+                    <input id="status" name="status" type="checkbox" data-x-dom-data-type="value" data-x-dom-feature="checkbox" defaultValue={this.state.data.status} />
+                  </td>
+                  <td className="table-body-text" >防止意外删除</td>
+                  <td className="table-body-input" >
+                    <input id="locking" name="locking" type="checkbox" data-x-dom-data-type="value" data-x-dom-feature="checkbox" defaultValue={this.state.data.locking} />
+                  </td>
+                </tr>
+
+                <tr className="table-row-normal-transparent">
+                  <td className="table-body-text" >更新时间</td>
+                  <td className="table-body-input" >{ this.state.data.modifiedDate }
+                    <input id="modifiedDate" name="modifiedDate" type="hidden" data-x-dom-data-type="value" defaultValue={this.state.data.modifiedDate} />
+                  </td>
+                  <td className="table-body-text" >创建时间</td>
+                  <td className="table-body-input" >{ this.state.data.createdDate }
+                    <input id="createdDate" name="createdDate" type="hidden" data-x-dom-data-type="value" defaultValue={this.state.data.createdDate} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div className="x-ui-pkg-tabs-container" style={{ margin: "10px 0 20px 0" }}>
-            <div id="window-condition-container">
-              <div>
-                <table className="table table-borderless">
-                  <tbody>
-                    <tr className="table-row-normal-transparent">
-                      <td className="table-body-text" style={{ width: "120px" }}>名称</td>
-                      <td className="table-body-input">
-                        <input id="id" name="id" type="hidden" value={this.state.data.id} data-x-dom-data-type="value" />
-                        <input id="name" name="name" type="text" defaultValue={this.state.data.name} data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
-                      </td>
-                    </tr>
-                    <tr className="table-row-normal-transparent">
-                      <td className="table-body-text">计算机类型</td>
-                      <td className="table-body-input">
-                        <input id="type" name="type" type="text" defaultValue={this.state.data.type} data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
-                      </td>
-                    </tr>
-                    <tr className="table-row-normal-transparent">
-                      <td className="table-body-text">IP</td>
-                      <td className="table-body-input">
-                        <input id="ip" name="ip" type="text" defaultValue={this.state.data.ip} data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
-                      </td>
-                    </tr>
-                    <tr className="table-row-normal-transparent">
-                      <td className="table-body-text">MAC</td>
-                      <td className="table-body-input">
-                        <input id="mac" name="mac" type="text" defaultValue={this.state.data.mac} data-x-dom-data-type="value" className="form-control" style={{ width: "200px" }} />
-                      </td>
-                    </tr>
-                    <tr className="table-row-normal-transparent">
-                      <td className="table-body-text">备注</td>
-                      <td className="table-body-input">
-                        <textarea id="remark" name="remark" data-x-dom-data-type="value" className="form-control" style={{ width: "200px", height: "80px" }} >{this.state.data.remark}</textarea>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+          <div name="所属成员">
+            <table className="table">
+              <tbody>
+                <tr className="table-row-normal-transparent">
+                  <td className="table-body-text" style={{ width: "120px" }} >所属成员</td>
+                  <td className="table-body-input">
+                    <textarea id="memberView" name="memberView" defaultValue={this.state.data.memberView} className="textarea-normal" style={{ width: "460px", height: "80px" }} ></textarea>
+                    <input id="memberText" name="memberText" type="hidden" data-x-dom-data-type="value" defaultValue={this.state.data.memberText} />
+                    <div className="text-right" style={{ width: "460px" }} >
+                      <a href="javascript:x.ui.wizards.getContactsWizardSingleton(\'memberView\', \'memberText\', \'account\');" >编辑</a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
+          <div name="备注">
+            <table className="table">
+              <tbody>
+                <tr className="table-row-normal-transparent">
+                  <td className="table-body-text bold-text" style={{ width: "120px" }} >备注</td>
+                  <td className="table-body-input">
+                    <textarea id="remark" name="remark" type="text" data-x-dom-data-type="value" defaultValue={this.state.data.remark} className="form-control" style={{ width: "460px", height: "80px" }} ></textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </Tabs>
       </div>
     );
   }
@@ -359,7 +441,7 @@ class GroupForm extends React.Component {
       outString += x.dom.data.serialize({ storageType: 'xml', scope: '#' + this.props.name });
       outString += '</request>';
 
-      x.net.xhr('/api/membership.role.save.aspx', outString, {
+      x.net.xhr('/api/membership.group.save.aspx', outString, {
         waitingMessage: i18n.strings.msg_net_waiting_save_tip_text,
         callback: function (response) {
           // var result = x.toJSON(response).message;

@@ -13,11 +13,12 @@ import App from '../shared/layouts/App';
 import TopContainer from '../shared/layouts/TopContainer';
 import ApplicationMenu from '../shared/layouts/ApplicationMenu';
 import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar';
+import Tabs from '../shared/layouts/Tabs';
 
 import Applications from './applications/ApplicationComponent';
-// import BigDb from './bigdb/ApplicationComponent';
-
 import Membership from './membership/ApplicationComponent';
+
+import BigDb from './bigdb/ApplicationComponent';
 
 class Home extends React.Component {
   render() {
@@ -64,6 +65,25 @@ const NoMatch = () => (
     <h2>No Match</h2>
   </div>
 )
+
+
+class TabsComponent extends React.Component {
+
+  render() {
+    return (
+      <div className="web-container" >
+        <ApplicationMenu applicationId={settings.applications["Membership"]} />
+        <ApplicationMenuHandleBar />
+
+        <Tabs>
+          <div name="first">1</div>
+          <div name="second">2</div>
+          <div name="third">3</div>
+        </Tabs>
+      </div>
+    );
+  }
+}
 
 render((
   <Router history={hashHistory}
@@ -116,6 +136,13 @@ render((
         <Route path="role/list" component={Membership.RoleList} />
         <Route path="computer/list" component={Membership.ComputerList} />
       </Route>
+      <Route path="bigdb" component={BigDb.ApplicationComponent} >
+        <IndexRoute component={BigDb.TerminalComponent} />
+        <Route path="search" component={BigDb.SearchComponent} />
+        <Route path="bank/list" component={BigDb.BankList} />
+        <Route path="task/list" component={BigDb.BankComponent} />
+      </Route>
+      <Route path="tabs" component={TabsComponent} />
       {/**<Route path="bigdb" component={BigDb.ApplicationComponent} >
         <IndexRoute component={BigDb.TerminalComponent} />
         <Route path="search" component={BigDb.SearchComponent} />

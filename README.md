@@ -7,6 +7,5 @@
 
 http://localhost:8080/
 
-**build**
-
-webpack --progress --colors
+编译
+**webpack --progress --colors**
