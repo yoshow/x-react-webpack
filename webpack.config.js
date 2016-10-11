@@ -65,14 +65,14 @@ module.exports = [{
       filename: 'applications/index.html',
       template: './src/html/applications/index.html',
       inject: true,
-      chunks: ['login']
+      chunks: ['applications']
     }),
     // 人员及权限管理页面
     new HtmlWebpackPlugin({
       filename: 'membership/index.html',
       template: './src/html/membership/index.html',
       inject: true,
-      chunks: ['login']
+      chunks: ['membership']
     })
   ],
   devServer: {

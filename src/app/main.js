@@ -16,9 +16,8 @@ import ApplicationMenuHandleBar from '../shared/layouts/ApplicationMenuHandleBar
 
 import NoMatch from './sys/NoMatchComponent';
 import Applications from './applications/ApplicationComponent';
-// import BigDb from './bigdb/ApplicationComponent';
-
 import Membership from './membership/ApplicationComponent';
+import BigDb from './bigdb/ApplicationComponent';
 
 render((
   <Router history={hashHistory}
@@ -68,6 +67,11 @@ render((
         <Route path="role/list" component={Membership.RoleList} />
         <Route path="computer/list" component={Membership.ComputerList} />
         <Route path="catalog/list" component={Membership.CatalogList} />
+      </Route>
+      <Route path="bigdb" component={BigDb.ApplicationComponent} >
+        <IndexRoute component={BigDb.TerminalComponent} />
+        <Route path="search" component={BigDb.SearchComponent} />
+        <Route path="bank/list" component={BigDb.BankList} />
       </Route>
       {/**<Route path="bigdb" component={BigDb.ApplicationComponent} >
         <IndexRoute component={BigDb.TerminalComponent} />
