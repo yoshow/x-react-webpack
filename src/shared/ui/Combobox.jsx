@@ -28,7 +28,13 @@ class Combobox extends React.Component {
 
     if (width) {
       width = width.replace('px', '');
-      ReactDOM.findDOMNode(this.refs.comboboxInnerContainer).style.width = (Number(width) + 39) + 'px';
+      ReactDOM.findDOMNode(this.refs.comboboxInput).style.width = (Number(width) - 39) + 'px';
+
+      var element = ReactDOM.findDOMNode(this.refs.combobox);
+      element.style.width = width + 'px';
+      element.style.minWidth = width + 'px';
+
+      ReactDOM.findDOMNode(this.refs.comboboxInnerContainer).style.width = (Number(width) - 2) + 'px';
     }
 
     if (this.props.xhrUrl) {
@@ -41,7 +47,7 @@ class Combobox extends React.Component {
     return (
       <div id={"x-ui-" + this.id + "-wrapper"} className="input-group dropdown" style={this.props.style} ref="comboboxWrapper">
         <input id={"x-ui-" + this.id + "-view"} readOnly="readonly" name="x-ui-status-view" type="text" value={this.state.text} data-toggle="dropdown"
-          onClick={this.handleClick.bind(this)} className="form-control" style={this.props.style} />
+          onClick={this.handleClick.bind(this) } onFocus={this.handleFocus.bind(this) } onBlur={this.handleBlur.bind(this) } className={this.props.className} ref="comboboxInput" />
         <div id={"x-ui-" + this.id + "-combobox"} className="dropdown-menu" style={{ display: 'none' }} ref="combobox" >
           <div id={"x-ui-" + this.id + "-combobox-innerContainer"} style={{ display: 'none' }} className="x-ui-pkg-combobox" ref="comboboxInnerContainer" >
             <ul>
@@ -55,16 +61,42 @@ class Combobox extends React.Component {
             </ul>
           </div>
         </div>
-        <div className="input-group-addon"><span onClick={this.handleClick.bind(this)} className="glyphicon glyphicon-list"></span></div>
+        <div className="input-group-addon" ref="comboboxAddon" onClick={this.handleClick.bind(this) } ><span onClick={this.handleClick.bind(this) } className="glyphicon glyphicon-list"></span></div>
       </div>
     );
   }
 
   handleClick() {
     x.debug.log(this.name + '.click');
-
+    ReactDOM.findDOMNode(this.refs.comboboxInput).focus();
+    ReactDOM.findDOMNode(this.refs.comboboxWrapper).className = ReactDOM.findDOMNode(this.refs.comboboxWrapper).className + ' open';
     ReactDOM.findDOMNode(this.refs.combobox).style.display = "";
     ReactDOM.findDOMNode(this.refs.comboboxInnerContainer).style.display = "";
+  }
+
+  handleFocus() {
+    x.debug.log(this.name + '.focus');
+    // 
+    // border-color: #ffe589;
+    // outline: 0;
+    // -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 229, 137, .6);
+    // box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 229, 137, .6);
+    var element = ReactDOM.findDOMNode(this.refs.comboboxAddon);
+    x.css.style(element, {
+      borderColor: '#ffe589',
+      outline: 0,
+      boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 229, 137, .6)'
+    });
+  }
+
+  handleBlur() {
+    x.debug.log(this.name + '.blur');
+    var element = ReactDOM.findDOMNode(this.refs.comboboxAddon);
+    x.css.style(element, {
+      borderColor: '#ccc',
+      outline: '0',
+      boxShadow: 'none'
+    });
   }
 
   setValue(value, text) {

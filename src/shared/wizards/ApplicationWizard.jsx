@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { Mask, MaskManager } from '../../shared/ui/Mask';
+import * as Effect from '../../shared/ui/Animations';
+
 import MainContainer from '../../shared/layouts/MainContainer';
-import Mask from '../../shared/ui/Mask';
 
 import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } from 'react-router'
-
-import { Modal, ModalManager } from '../../shared/layouts/Modal';
-import * as Effect from '../../shared/ui/Animations';
 
 class ApplicationWizard extends React.Component {
   /**
@@ -38,11 +37,11 @@ class ApplicationWizard extends React.Component {
   render() {
     x.debug.log(this.name + '.render');
     return (
-      <Modal style={{ content: { width: "302px" } }} onRequestClose = {() => true} effect = { Effect.SlideFromBottom } >
+      <Mask style={{ content: { width: "302px" } }} onRequestClose = {() => true} effect = { Effect.SlideFromBottom } >
         <div id={this.name} className="winodw-wizard-wrapper" style={{ width: "300px", height: "auto" }} >
           <div className="winodw-wizard-toolbar" >
             <div className="winodw-wizard-toolbar-close">
-              <a role="button" onClick={ModalManager.close} title="关闭" ><i className="fa fa-close"></i></a>
+              <a role="button" onClick={MaskManager.close} title="关闭" ><i className="fa fa-close"></i></a>
             </div>
             <div className="float-left">
               <div className="winodw-wizard-toolbar-item" style={{ width: "200px" }} ><span>应用选择向导</span></div>
@@ -62,7 +61,7 @@ class ApplicationWizard extends React.Component {
             <a role="button" onClick={ this.handleClick.bind(this) } className="btn btn-default btn-sm" >确定</a>
           </div>
         </div>
-      </Modal>
+      </Mask>
     );
   }
 
@@ -71,7 +70,7 @@ class ApplicationWizard extends React.Component {
   };
 
   handleClick(event) {
-    ModalManager.close();
+    MaskManager.close();
     this.onClose(this.returnValue);
   }
 

@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import CatalogItem from '../../shared/dom/CatalogItem';
+
 import MainContainer from '../../shared/layouts/MainContainer';
 import Grid from '../../shared/ui/Grid';
 import Mask from '../../shared/ui/Mask';
 import Tabs from '../../shared/ui/Tabs';
-
-
-import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } from 'react-router'
-
 import { Modal, ModalManager } from '../../shared/layouts/Modal';
 import * as Effect from '../../shared/ui/Animations';
+
+import { Router, Route, IndexRoute, Link, hashHistory, applyRouterMiddleware } from 'react-router'
 
 class GroupList extends React.Component {
   /**
@@ -261,7 +261,6 @@ class GroupForm extends React.Component {
       }];
 
     this.state = { data: this.props.data };
-    // this.handleChange = this.handleChange.bind(this);
   }
 
   /**
@@ -334,9 +333,18 @@ class GroupForm extends React.Component {
                   </td>
                   <td className="table-body-text" style={{ width: "120px" }} ><span className="required-text">所属类别</span></td>
                   <td className="table-body-input" >
-                    <input id="catalogItemId" name="catalogItemId" type="hidden" data-x-dom-data-type="value" defaultValue={ this.state.data.catalogItemId } />
-                    <input id="catalogItemName" name="catalogItemName" type="text" data-x-dom-data-type="value" data-x-dom-data-required="1" data-x-dom-data-required-warning="【所属类别】必须填写。" defaultValue={this.state.data.catalogItemName} className="form-control" style={{ width: "120px" }} />
-                    <a href="javascript:x.ui.wizards.getGroupTreeWizardSingleton(\'catalogItemName\', \'catalogItemId\', \'40000000-0000-0000-0000-000000000000\', \'常用群组类别\');" >编辑</a>
+                    <CatalogItem name="catalogItemId"
+                      value={ this.state.data.catalogItemId }
+                      text={ this.state.data.catalogItemName }
+                      dataType="value" 
+                      dataRequired="1"
+                      dataRequiredWarning="【所属类别】必须填写。"
+                      className="form-control"
+                      style={{ width: "120px" }}
+                      treeViewId="常用群组类别"
+                      treeViewName="常用群组类别"
+                      treeViewRootTreeNodeId="40000000-0000-0000-0000-000000000000"
+                      />
                   </td>
                 </tr>
 
@@ -358,7 +366,7 @@ class GroupForm extends React.Component {
                   </td>
                   <td className="table-body-text" style={{ width: "120px" }} >启用企业邮箱</td>
                   <td className="table-body-input" >
-                    <input id="enableExchangeEmail" name="enableExchangeEmail" type="checkbox" data-x-dom-data-type="value" data-x-dom-feature="checkbox" defaultValue={this.state.data.enableExchangeEmail} />
+                    <input id="enableExchangeEmail" name="enableExchangeEmail" type="checkbox" data-x-dom-data-type="value" data-x-dom-feature="checkbox" defaultValue="0" />
                   </td>
                 </tr>
 
@@ -375,12 +383,12 @@ class GroupForm extends React.Component {
 
                 <tr className="table-row-normal-transparent">
                   <td className="table-body-text" >更新时间</td>
-                  <td className="table-body-input" >{ this.state.data.modifiedDate }
-                    <input id="modifiedDate" name="modifiedDate" type="hidden" data-x-dom-data-type="value" defaultValue={this.state.data.modifiedDate} />
+                  <td className="table-body-input" >{ x.date.newTime(this.state.data.modifiedDate).toString('yyyy-MM-dd HH:mm:ss') }
+                    <input id="modifiedDate" name="modifiedDate" type="hidden" data-x-dom-data-type="value" defaultValue={x.date.newTime(this.state.data.modifiedDate).toString('yyyy-MM-dd HH:mm:ss') } />
                   </td>
                   <td className="table-body-text" >创建时间</td>
-                  <td className="table-body-input" >{ this.state.data.createdDate }
-                    <input id="createdDate" name="createdDate" type="hidden" data-x-dom-data-type="value" defaultValue={this.state.data.createdDate} />
+                  <td className="table-body-input" >{ x.date.newTime(this.state.data.createdDate).toString('yyyy-MM-dd HH:mm:ss') }
+                    <input id="createdDate" name="createdDate" type="hidden" data-x-dom-data-type="value" defaultValue={x.date.newTime(this.state.data.createdDate).toString('yyyy-MM-dd HH:mm:ss') } />
                   </td>
                 </tr>
               </tbody>

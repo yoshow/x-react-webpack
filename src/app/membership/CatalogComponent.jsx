@@ -335,4 +335,7 @@ class CatalogForm extends React.Component {
   }
 }
 
-export { CatalogList, CatalogForm };
+export {
+  CatalogList,
+  CatalogForm
+};
